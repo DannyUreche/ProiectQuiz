@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="GestionarDate/GestionarDate.csproj" />
+  <Project Path="Modele/Modele.csproj" />
   <Project Path="ProiectQuiz/ProiectQuiz.csproj" />
 </Solution>
