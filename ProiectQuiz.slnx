@@ -2,4 +2,5 @@
   <Project Path="GestionarDate/GestionarDate.csproj" />
   <Project Path="Modele/Modele.csproj" />
   <Project Path="ProiectQuiz/ProiectQuiz.csproj" />
+  <Project Path="ProiectQuizWPF/ProiectQuizWPF.csproj" Id="b7a3e140-0ac8-4faa-8df6-547ea08a8e2c" />
 </Solution>
