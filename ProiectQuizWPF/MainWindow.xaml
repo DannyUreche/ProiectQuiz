@@ -1,8 +1,7 @@
 ﻿<Window x:Class="ProiectQuizWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Quiz App" Height="500" Width="800"
-        WindowState="Maximized"
+        Title="Quiz App" Height="600" Width="900"
         Background="#1E1E2E">
 
     <Window.Resources>
@@ -11,56 +10,86 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#CDD6F4"/>
         </Style>
-        <Style TargetType="TextBlock">
+        <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#313244"/>
             <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="BorderBrush" Value="#45475A"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="20">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <!-- Titlu -->
-            <Label Content="Quiz App"
-                   FontSize="36"
-                   FontWeight="Bold"
-                   Foreground="#CBA6F7"
+        <!-- Titlu -->
+        <Label Grid.Row="0" Content="Adauga Categorie"
+               FontSize="28" FontWeight="Bold"
+               Foreground="#CBA6F7"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,20"/>
+
+        <!-- Nume Categorie -->
+        <Label Grid.Row="1" Content="Nume Categorie"
+               Foreground="#89B4FA" Name="lblNume"/>
+        <TextBox Grid.Row="2" Name="txtNume" Margin="0,0,0,5"/>
+        <TextBlock Grid.Row="2" Name="tbErrNume"
+                   Text="Numele este obligatoriu (max 20 caractere)!"
+                   FontSize="11" Foreground="#F38BA8"
+                   Margin="0,40,0,0"
+                   Visibility="Collapsed"/>
+
+        <!-- Dificultate -->
+        <Label Grid.Row="3" Content="Dificultate (1=Usor, 2=Mediu, 3=Greu)"
+               Foreground="#89B4FA" Name="lblDificultate" Margin="0,10,0,0"/>
+        <TextBox Grid.Row="4" Name="txtDificultate" Margin="0,0,0,5"/>
+        <TextBlock Grid.Row="4" Name="tbErrDificultate"
+                   Text="Introduceti 1, 2 sau 3!"
+                   FontSize="11" Foreground="#F38BA8"
+                   Margin="0,40,0,0"
+                   Visibility="Collapsed"/>
+
+        <!-- Butoane -->
+        <Grid Grid.Row="5" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Adauga"
+                    Background="#A6E3A1" Foreground="#1E1E2E"
+                    Click="OnAdauga"/>
+
+            <Button Grid.Column="2" Content="Reset"
+                    Background="#F38BA8" Foreground="#1E1E2E"
+                    Click="OnReset"/>
+        </Grid>
+
+        <!-- Mesaj succes -->
+        <TextBlock Grid.Row="6" Name="tbSucces"
+                   Text="Categorie adaugata cu succes!"
+                   FontSize="14" Foreground="#A6E3A1"
                    HorizontalAlignment="Center"
-                   Margin="0,0,0,20"/>
-
-            <!-- Informatii Categorie -->
-            <Border Background="#313244"
-                    CornerRadius="10"
-                    Padding="20"
-                    Margin="0,0,0,15">
-                <StackPanel>
-                    <Label Content="Categorie"
-                           FontSize="18"
-                           FontWeight="Bold"
-                           Foreground="#89B4FA"/>
-                    <Label Name="lblNumeCategorie" Content="Geografie"/>
-                    <Label Name="lblDificultate" Content="Dificultate: Usor"/>
-                    <Label Name="lblNrIntrebari" Content="Numar intrebari: 5"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Informatii Jucator -->
-            <Border Background="#313244"
-                    CornerRadius="10"
-                    Padding="20"
-                    Margin="0,0,0,15">
-                <StackPanel>
-                    <Label Content="Jucator"
-                           FontSize="18"
-                           FontWeight="Bold"
-                           Foreground="#A6E3A1"/>
-                    <Label Name="lblNumeJucator" Content="Nume: Andrei"/>
-                    <Label Name="lblScor" Content="Scor: 0"/>
-                    <Label Name="lblNivel" Content="Nivel: Incepator"/>
-                </StackPanel>
-            </Border>
-
-        </StackPanel>
+                   Margin="0,15,0,0"
+                   Visibility="Collapsed"/>
     </Grid>
 </Window>
