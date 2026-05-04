@@ -1,7 +1,8 @@
 ﻿<Window x:Class="ProiectQuizWPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Quiz App" Height="600" Width="900"
+        Title="Quiz App" MinWidth="700" MinHeight="500"
+        Width="1000" Height="650"
         Background="#1E1E2E">
 
     <Window.Resources>
@@ -26,70 +27,152 @@
             <Setter Property="Height" Value="40"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,0,15,0"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,5,0,0"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="30">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- Titlu -->
-        <Label Grid.Row="0" Content="Adauga Categorie"
-               FontSize="28" FontWeight="Bold"
-               Foreground="#CBA6F7"
-               HorizontalAlignment="Center"
-               Margin="0,0,0,20"/>
-
-        <!-- Nume Categorie -->
-        <Label Grid.Row="1" Content="Nume Categorie"
-               Foreground="#89B4FA" Name="lblNume"/>
-        <TextBox Grid.Row="2" Name="txtNume" Margin="0,0,0,5"/>
-        <TextBlock Grid.Row="2" Name="tbErrNume"
-                   Text="Numele este obligatoriu (max 20 caractere)!"
-                   FontSize="11" Foreground="#F38BA8"
-                   Margin="0,40,0,0"
-                   Visibility="Collapsed"/>
-
-        <!-- Dificultate -->
-        <Label Grid.Row="3" Content="Dificultate (1=Usor, 2=Mediu, 3=Greu)"
-               Foreground="#89B4FA" Name="lblDificultate" Margin="0,10,0,0"/>
-        <TextBox Grid.Row="4" Name="txtDificultate" Margin="0,0,0,5"/>
-        <TextBlock Grid.Row="4" Name="tbErrDificultate"
-                   Text="Introduceti 1, 2 sau 3!"
-                   FontSize="11" Foreground="#F38BA8"
-                   Margin="0,40,0,0"
-                   Visibility="Collapsed"/>
-
-        <!-- Butoane -->
-        <Grid Grid.Row="5" Margin="0,20,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="20"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Content="Adauga"
-                    Background="#A6E3A1" Foreground="#1E1E2E"
-                    Click="OnAdauga"/>
-
-            <Button Grid.Column="2" Content="Reset"
-                    Background="#F38BA8" Foreground="#1E1E2E"
-                    Click="OnReset"/>
-        </Grid>
-
-        <!-- Mesaj succes -->
-        <TextBlock Grid.Row="6" Name="tbSucces"
-                   Text="Categorie adaugata cu succes!"
-                   FontSize="14" Foreground="#A6E3A1"
+        <!-- Meniu lateral -->
+        <StackPanel Grid.Column="0" Background="#181825">
+            <Label Content="QUIZ APP"
+                   FontSize="18" FontWeight="Bold"
+                   Foreground="#CBA6F7"
                    HorizontalAlignment="Center"
-                   Margin="0,15,0,0"
-                   Visibility="Collapsed"/>
+                   Margin="0,20,0,30"/>
+
+            <Button Content="Adauga Categorie"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="#CDD6F4"
+                    Height="45"
+                    Click="OnMenuAdauga"/>
+
+            <Button Content="Cauta Categorie"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="#CDD6F4"
+                    Height="45"
+                    Click="OnMenuCauta"/>
+        </StackPanel>
+
+        <!-- Continut principal -->
+        <Grid Grid.Column="1" Margin="30">
+
+            <!-- Panel Adauga -->
+            <StackPanel Name="panelAdauga" Visibility="Visible">
+                <Label Content="Adauga Categorie"
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="#CBA6F7"
+                       Margin="0,0,0,20"/>
+
+                <!-- Nume -->
+                <Label Content="Nume Categorie" Name="lblNume" Foreground="#89B4FA"/>
+                <TextBox Name="txtNume" Margin="0,0,0,5"/>
+                <TextBlock Name="tbErrNume"
+                           Text="Numele este obligatoriu (max 20 caractere)!"
+                           FontSize="11" Foreground="#F38BA8"
+                           Margin="0,0,0,10"
+                           Visibility="Collapsed"/>
+
+                <!-- Dificultate RadioButton -->
+                <Label Content="Dificultate" Name="lblDificultate" Foreground="#89B4FA" Margin="0,10,0,5"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <RadioButton Name="rbUsor" Content="Usor"
+                                 GroupName="Dificultate" IsChecked="True"/>
+                    <RadioButton Name="rbMediu" Content="Mediu"
+                                 GroupName="Dificultate"/>
+                    <RadioButton Name="rbGreu" Content="Greu"
+                                 GroupName="Dificultate"/>
+                </StackPanel>
+                <TextBlock Name="tbErrDificultate"
+                           Text="Selectati o dificultate!"
+                           FontSize="11" Foreground="#F38BA8"
+                           Margin="0,0,0,10"
+                           Visibility="Collapsed"/>
+
+                <!-- Optiuni CheckBox -->
+                <Label Content="Optiuni Quiz" Foreground="#89B4FA" Margin="0,10,0,5"/>
+                <CheckBox Name="ckbTimer" Content="Timer per intrebare"/>
+                <CheckBox Name="ckbImagini" Content="Intrebari cu imagini"/>
+                <CheckBox Name="ckbLeaderboard" Content="Leaderboard activ"/>
+
+                <!-- Butoane -->
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Content="Adauga"
+                            Background="#A6E3A1" Foreground="#1E1E2E"
+                            Click="OnAdauga"/>
+                    <Button Grid.Column="2" Content="Reset"
+                            Background="#F38BA8" Foreground="#1E1E2E"
+                            Click="OnReset"/>
+                </Grid>
+
+                <TextBlock Name="tbSucces"
+                           Text="Categorie adaugata cu succes!"
+                           FontSize="14" Foreground="#A6E3A1"
+                           HorizontalAlignment="Center"
+                           Margin="0,15,0,0"
+                           Visibility="Collapsed"/>
+            </StackPanel>
+
+            <!-- Panel Cauta -->
+            <StackPanel Name="panelCauta" Visibility="Collapsed">
+                <Label Content="Cauta Categorie"
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="#CBA6F7"
+                       Margin="0,0,0,20"/>
+
+                <Label Content="Nume categorie" Foreground="#89B4FA"/>
+                <TextBox Name="txtCauta" Margin="0,0,0,10"/>
+
+                <Button Content="Cauta"
+                        Background="#89B4FA" Foreground="#1E1E2E"
+                        Width="150" HorizontalAlignment="Left"
+                        Click="OnCauta"/>
+
+                <TextBlock Name="tbErrCauta"
+                           Text="Categoria nu a fost gasita!"
+                           FontSize="12" Foreground="#F38BA8"
+                           Margin="0,10,0,0"
+                           Visibility="Collapsed"/>
+
+                <DataGrid Name="dgCategorii"
+                          Margin="0,15,0,0"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Background="#313244"
+                          Foreground="#CDD6F4"
+                          RowBackground="#313244"
+                          AlternatingRowBackground="#45475A"
+                          Visibility="Collapsed">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nume" Binding="{Binding Nume}" Width="*"/>
+                        <DataGridTextColumn Header="Dificultate" Binding="{Binding Dificultate}" Width="*"/>
+                        <DataGridTextColumn Header="Nr Intrebari" Binding="{Binding Intrebari.Count}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+        </Grid>
     </Grid>
 </Window>
