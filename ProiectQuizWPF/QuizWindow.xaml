@@ -1,0 +1,78 @@
+﻿<Window x:Class="ProiectQuizWPF.QuizWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quiz" MinWidth="600" MinHeight="500"
+        Width="800" Height="600"
+        Background="#1E1E2E">
+
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#CDD6F4"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Label Grid.Row="0" Name="lblCategorie"
+               Content="Categorie"
+               FontSize="20" FontWeight="Bold"
+               Foreground="#CBA6F7"/>
+
+        <Label Grid.Row="1" Name="lblProgres"
+               Content="Intrebarea 1 din 5"
+               Foreground="#89B4FA"
+               Margin="0,0,0,10"/>
+
+        <!-- Intrebare -->
+        <Border Grid.Row="2" Background="#313244"
+                CornerRadius="10" Padding="20"
+                Margin="0,0,0,20">
+            <TextBlock Name="txtIntrebare"
+                       Text="Textul intrebarii"
+                       FontSize="18"
+                       Foreground="#CDD6F4"
+                       TextWrapping="Wrap"/>
+        </Border>
+
+        <!-- Variante raspuns -->
+        <StackPanel Grid.Row="3" Name="panelVariante"/>
+
+        <!-- Feedback -->
+        <TextBlock Grid.Row="4" Name="tbFeedback"
+                   FontSize="16" FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,10,0,10"
+                   Visibility="Collapsed"/>
+
+        <!-- Buton urmator -->
+        <Button Grid.Row="5" Name="btnUrmator"
+                Content="Urmatoarea intrebare"
+                Background="#CBA6F7" Foreground="#1E1E2E"
+                Width="250" HorizontalAlignment="Center"
+                Click="OnUrmator"/>
+    </Grid>
+</Window>
