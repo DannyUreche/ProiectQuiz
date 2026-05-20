@@ -1,11 +1,27 @@
-﻿namespace Modele
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace Modele
 {
     public enum NivelJucator { Incepator, Intermediar, Avansat }
 
-    public class Jucator
+    public class Jucator : INotifyPropertyChanged
     {
-        public string Nume { get; set; }
-        public int Scor { get; set; }
+        private string nume;
+        private int scor;
+
+        public string Nume
+        {
+            get => nume;
+            set { nume = value; OnPropertyChanged(); }
+        }
+
+        public int Scor
+        {
+            get => scor;
+            set { scor = value; OnPropertyChanged(); }
+        }
+
         public int RaspunsuriCorecte { get; set; }
         public int RaspunsuriGresite { get; set; }
         public NivelJucator Nivel { get; set; }
@@ -33,19 +49,20 @@
 
         private void ActualizeazaNivel()
         {
-            if (Scor >= 100)
-                Nivel = NivelJucator.Avansat;
-            else if (Scor >= 50)
-                Nivel = NivelJucator.Intermediar;
-            else
-                Nivel = NivelJucator.Incepator;
+            if (Scor >= 100) Nivel = NivelJucator.Avansat;
+            else if (Scor >= 50) Nivel = NivelJucator.Intermediar;
+            else Nivel = NivelJucator.Incepator;
         }
 
         public override string ToString()
         {
-            return $"{Nume} - Scor: {Scor} | Nivel: {Nivel} " +
-                   $"(Corecte: {RaspunsuriCorecte}, " +
-                   $"Gresite: {RaspunsuriGresite})";
+            return $"{Nume} - Scor: {Scor} | Nivel: {Nivel}";
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

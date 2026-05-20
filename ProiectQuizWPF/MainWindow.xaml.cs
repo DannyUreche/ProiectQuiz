@@ -1,6 +1,8 @@
 ﻿using Modele;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace ProiectQuizWPF
 {
@@ -8,10 +10,20 @@ namespace ProiectQuizWPF
     {
         private const int LUNGIME_MAX_NUME = 20;
         private List<Categorie> categorii = new List<Categorie>();
+        private ObservableCollection<Jucator> jucatori = new ObservableCollection<Jucator>();
+
+        private Jucator jucatorSelectat;
+        public Jucator JucatorSelectat
+        {
+            get => jucatorSelectat;
+            set { jucatorSelectat = value; }
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+            dgJucatori.ItemsSource = jucatori;
             PopuleazaExemple();
         }
 
@@ -103,7 +115,7 @@ namespace ProiectQuizWPF
             fizicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce este temperatura masurata in?", new List<string> { "Newton", "Pascal", "Celsius", "Watt" }, 2));
             fizicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Apa fierbe la 100 de grade Celsius la presiune normala.", true));
             fizicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce este densitatea?", new List<string> { "Masa/Volum", "Volum/Masa", "Masa*Volum", "Masa+Volum" }, 0));
-            
+
             // FIZICA MEDIU
             var fizicaMediu = new Categorie("Fizica - Mediu", Dificultate.Mediu);
             fizicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este acceleratia?", new List<string> { "Viteza/Timp", "Variatie viteza/Timp", "Forta/Masa", "Masa*Viteza" }, 1));
@@ -351,7 +363,7 @@ namespace ProiectQuizWPF
             categorii.Add(muzicaMediu);
             categorii.Add(muzicaGreu);
         }
-       
+
 
         // Meniu
         private void OnMenuAdauga(object sender, RoutedEventArgs e)
@@ -359,6 +371,8 @@ namespace ProiectQuizWPF
             panelAdauga.Visibility = Visibility.Visible;
             panelCauta.Visibility = Visibility.Collapsed;
             panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Collapsed;
+            panelJoaca.Visibility = Visibility.Collapsed;
         }
 
         private void OnMenuCauta(object sender, RoutedEventArgs e)
@@ -366,6 +380,8 @@ namespace ProiectQuizWPF
             panelAdauga.Visibility = Visibility.Collapsed;
             panelCauta.Visibility = Visibility.Visible;
             panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Collapsed;
+            panelJoaca.Visibility = Visibility.Collapsed;
         }
 
         private void OnMenuModifica(object sender, RoutedEventArgs e)
@@ -373,8 +389,9 @@ namespace ProiectQuizWPF
             panelAdauga.Visibility = Visibility.Collapsed;
             panelCauta.Visibility = Visibility.Collapsed;
             panelModifica.Visibility = Visibility.Visible;
+            panelJucatori.Visibility = Visibility.Collapsed;
+            panelJoaca.Visibility = Visibility.Collapsed;
 
-            // Incarca categoriile in ComboBox
             cmbCategorii.ItemsSource = null;
             cmbCategorii.ItemsSource = categorii;
         }
@@ -443,6 +460,7 @@ namespace ProiectQuizWPF
             panelAdauga.Visibility = Visibility.Collapsed;
             panelCauta.Visibility = Visibility.Collapsed;
             panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Collapsed;
             panelJoaca.Visibility = Visibility.Visible;
 
             lstCategoriiJoc.ItemsSource = null;
@@ -535,6 +553,92 @@ namespace ProiectQuizWPF
             // Refresh ComboBox
             cmbCategorii.ItemsSource = null;
             cmbCategorii.ItemsSource = categorii;
+        }
+
+        // Meniu Jucatori
+        private void OnMenuJucatori(object sender, RoutedEventArgs e)
+        {
+            panelAdauga.Visibility = Visibility.Collapsed;
+            panelCauta.Visibility = Visibility.Collapsed;
+            panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Visible;
+            panelJoaca.Visibility = Visibility.Collapsed;
+        }
+
+        private void OnJucatorSelectat(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (dgJucatori.SelectedItem is Jucator j)
+            {
+                JucatorSelectat = j;
+                txtNumeJucatorCRUD.Text = j.Nume;
+                txtScorJucator.Text = j.Scor.ToString();
+                tbErrJucator.Visibility = Visibility.Collapsed;
+                tbSuccesJucator.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAdaugaJucator(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNumeJucatorCRUD.Text))
+            {
+                tbErrJucator.Visibility = Visibility.Visible;
+                return;
+            }
+
+            Jucator j = new Jucator(txtNumeJucatorCRUD.Text);
+            if (int.TryParse(txtScorJucator.Text, out int scor))
+                j.Scor = scor;
+
+            jucatori.Add(j);
+            txtNumeJucatorCRUD.Text = string.Empty;
+            txtScorJucator.Text = string.Empty;
+            tbErrJucator.Visibility = Visibility.Collapsed;
+            tbSuccesJucator.Text = "Jucator adaugat!";
+            tbSuccesJucator.Visibility = Visibility.Visible;
+        }
+
+        private void OnModificaJucator(object sender, RoutedEventArgs e)
+        {
+            if (dgJucatori.SelectedItem is not Jucator j)
+            {
+                tbSuccesJucator.Text = "Selectati un jucator!";
+                tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(243, 139, 168));
+                tbSuccesJucator.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNumeJucatorCRUD.Text))
+            {
+                tbErrJucator.Visibility = Visibility.Visible;
+                return;
+            }
+
+            j.Nume = txtNumeJucatorCRUD.Text;
+            if (int.TryParse(txtScorJucator.Text, out int scor))
+                j.Scor = scor;
+
+            dgJucatori.Items.Refresh();
+            tbSuccesJucator.Text = "Jucator modificat!";
+            tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(166, 227, 161));
+            tbSuccesJucator.Visibility = Visibility.Visible;
+        }
+
+        private void OnStergeJucator(object sender, RoutedEventArgs e)
+        {
+            if (dgJucatori.SelectedItem is not Jucator j)
+            {
+                tbSuccesJucator.Text = "Selectati un jucator!";
+                tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(243, 139, 168));
+                tbSuccesJucator.Visibility = Visibility.Visible;
+                return;
+            }
+
+            jucatori.Remove(j);
+            txtNumeJucatorCRUD.Text = string.Empty;
+            txtScorJucator.Text = string.Empty;
+            tbSuccesJucator.Text = "Jucator sters!";
+            tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(166, 227, 161));
+            tbSuccesJucator.Visibility = Visibility.Visible;
         }
     }
 }

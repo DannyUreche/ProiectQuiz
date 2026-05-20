@@ -76,6 +76,13 @@
                     Height="45"
                     Click="OnMenuModifica"/>
 
+            <Button Content="Jucatori"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="#CDD6F4"
+                    Height="45"
+                    Click="OnMenuJucatori"/>
+
             <Button Content="Joaca Quiz"
                     Background="#CBA6F7"
                     BorderThickness="0"
@@ -194,7 +201,7 @@
                 <ComboBox Name="cmbCategorii"
                           Height="36"
                           Background="#313244"
-                          Foreground="#CDD6F4"
+                          Foreground="#313244"
                           DisplayMemberPath="Nume"
                           SelectionChanged="OnCategorieSelectata"
                           Margin="0,0,0,15"/>
@@ -266,6 +273,89 @@
                            Text="Selectati o categorie si introduceti numele!"
                            FontSize="12" Foreground="#F38BA8"
                            Margin="0,10,0,0"
+                           Visibility="Collapsed"/>
+            </StackPanel>
+
+            <!-- Panel Jucatori -->
+            <StackPanel Name="panelJucatori" Visibility="Collapsed">
+                <Label Content="Gestiune Jucatori"
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="#CBA6F7"
+                       Margin="0,0,0,20"/>
+
+                <!-- Binding la numar jucatori -->
+                <Label Content="{Binding ElementName=dgJucatori, Path=Items.Count, StringFormat='Total jucatori: {0}'}"
+                       Foreground="#89B4FA"
+                       FontWeight="Bold"
+                       Margin="0,0,0,10"/>
+
+                <!-- DataGrid jucatori -->
+                <DataGrid Name="dgJucatori"
+                          Height="180"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Background="#313244"
+                          Foreground="#CDD6F4"
+                          RowBackground="#313244"
+                          AlternatingRowBackground="#45475A"
+                          SelectionChanged="OnJucatorSelectat"
+                          Margin="0,0,0,15">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nume" Binding="{Binding Nume}" Width="*"/>
+                        <DataGridTextColumn Header="Scor" Binding="{Binding Scor}" Width="*"/>
+                        <DataGridTextColumn Header="Nivel" Binding="{Binding Nivel}" Width="*"/>
+                        <DataGridTextColumn Header="Corecte" Binding="{Binding RaspunsuriCorecte}" Width="*"/>
+                        <DataGridTextColumn Header="Gresite" Binding="{Binding RaspunsuriGresite}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Formular -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Nume jucator" Name="lblNumeJucator" Foreground="#89B4FA"/>
+                        <TextBox Name="txtNumeJucatorCRUD"
+                                 Text="{Binding JucatorSelectat.Nume, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,5"/>
+                        <TextBlock Name="tbErrJucator"
+                                   Text="Numele este obligatoriu!"
+                                   FontSize="11" Foreground="#F38BA8"
+                                   Visibility="Collapsed"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <Label Content="Scor" Foreground="#89B4FA"/>
+                        <TextBox Name="txtScorJucator"
+                                 Text="{Binding JucatorSelectat.Scor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,5"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Butoane CRUD -->
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                    <Button Content="Adauga"
+                            Background="#A6E3A1" Foreground="#1E1E2E"
+                            Width="100" Margin="0,0,10,0"
+                            Click="OnAdaugaJucator"/>
+                    <Button Content="Modifica"
+                            Background="#89B4FA" Foreground="#1E1E2E"
+                            Width="100" Margin="0,0,10,0"
+                            Click="OnModificaJucator"/>
+                    <Button Content="Sterge"
+                            Background="#F38BA8" Foreground="#1E1E2E"
+                            Width="100"
+                            Click="OnStergeJucator"/>
+                </StackPanel>
+
+                <TextBlock Name="tbSuccesJucator"
+                           FontSize="14" Foreground="#A6E3A1"
+                           Margin="0,15,0,0"
                            Visibility="Collapsed"/>
             </StackPanel>
 
