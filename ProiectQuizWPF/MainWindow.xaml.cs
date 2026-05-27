@@ -1,8 +1,10 @@
-﻿using Modele;
-using System.Collections.ObjectModel;
+﻿
+using Modele;
+using GestionarDate;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace ProiectQuizWPF
 {
@@ -11,6 +13,7 @@ namespace ProiectQuizWPF
         private const int LUNGIME_MAX_NUME = 20;
         private List<Categorie> categorii = new List<Categorie>();
         private ObservableCollection<Jucator> jucatori = new ObservableCollection<Jucator>();
+        private GestionarDate.StocareDataFisier stocare = new GestionarDate.StocareDataFisier();
 
         private Jucator jucatorSelectat;
         public Jucator JucatorSelectat
@@ -362,6 +365,43 @@ namespace ProiectQuizWPF
             categorii.Add(muzicaUsor);
             categorii.Add(muzicaMediu);
             categorii.Add(muzicaGreu);
+
+            // Jucatori exemple
+            var j1 = new Jucator("Alexandru");
+            j1.Scor = 95;
+            j1.RaspunsuriCorecte = 9;
+            j1.RaspunsuriGresite = 1;
+            j1.Nivel = NivelJucator.Avansat;
+
+            var j2 = new Jucator("Maria");
+            j2.Scor = 80;
+            j2.RaspunsuriCorecte = 8;
+            j2.RaspunsuriGresite = 2;
+            j2.Nivel = NivelJucator.Avansat;
+
+            var j3 = new Jucator("Andrei");
+            j3.Scor = 60;
+            j3.RaspunsuriCorecte = 6;
+            j3.RaspunsuriGresite = 4;
+            j3.Nivel = NivelJucator.Intermediar;
+
+            var j4 = new Jucator("Elena");
+            j4.Scor = 40;
+            j4.RaspunsuriCorecte = 4;
+            j4.RaspunsuriGresite = 6;
+            j4.Nivel = NivelJucator.Incepator;
+
+            var j5 = new Jucator("Mihai");
+            j5.Scor = 20;
+            j5.RaspunsuriCorecte = 2;
+            j5.RaspunsuriGresite = 8;
+            j5.Nivel = NivelJucator.Incepator;
+
+            jucatori.Add(j1);
+            jucatori.Add(j2);
+            jucatori.Add(j3);
+            jucatori.Add(j4);
+            jucatori.Add(j5);
         }
 
 
@@ -394,6 +434,161 @@ namespace ProiectQuizWPF
 
             cmbCategorii.ItemsSource = null;
             cmbCategorii.ItemsSource = categorii;
+        }
+
+        private Categorie categorieNoua;
+        private int nrIntrebariTotal;
+        private int intrebareCurenta;
+
+        private void OnUrmatorul(object sender, RoutedEventArgs e)
+        {
+            // Validare nume
+            if (string.IsNullOrWhiteSpace(txtNume.Text) || txtNume.Text.Length > LUNGIME_MAX_NUME)
+            {
+                lblNume.Foreground = new SolidColorBrush(Color.FromRgb(243, 139, 168));
+                tbErrNume.Visibility = Visibility.Visible;
+                return;
+            }
+
+            // Validare numar intrebari
+            if (!int.TryParse(txtNrIntrebari.Text, out int nr) || nr < 1 || nr > 20)
+            {
+                tbErrNrIntrebari.Visibility = Visibility.Visible;
+                return;
+            }
+
+            tbErrNume.Visibility = Visibility.Collapsed;
+            tbErrNrIntrebari.Visibility = Visibility.Collapsed;
+
+            Dificultate dificultate = GetDificultateSelectata();
+            categorieNoua = new Categorie(txtNume.Text, dificultate);
+            nrIntrebariTotal = nr;
+            intrebareCurenta = 1;
+
+            pasul1.Visibility = Visibility.Collapsed;
+            pasul2.Visibility = Visibility.Visible;
+            ActualizeazaLabelIntrebare();
+        }
+
+        private void ActualizeazaLabelIntrebare()
+        {
+            lblIntrebareCurenta.Content = $"Intrebarea {intrebareCurenta} din {nrIntrebariTotal}";
+            txtTextIntrebare.Text = string.Empty;
+            txtV1.Text = string.Empty;
+            txtV2.Text = string.Empty;
+            txtV3.Text = string.Empty;
+            txtV4.Text = string.Empty;
+            rbUnica.IsChecked = true;
+            rb2Variante.IsChecked = true;
+            rbR1.IsChecked = true;
+            tbErrIntrebare.Visibility = Visibility.Collapsed;
+        }
+
+        private void OnTipIntrebareChanged(object sender, RoutedEventArgs e)
+        {
+            if (panelVarianteAdauga == null) return;
+
+            if (rbUnica.IsChecked == true)
+            {
+                panelVarianteAdauga.Visibility = Visibility.Visible;
+                panelAdevaratFals.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                panelVarianteAdauga.Visibility = Visibility.Collapsed;
+                panelAdevaratFals.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void OnNrVarianteChanged(object sender, RoutedEventArgs e)
+        {
+            if (panelV3 == null) return;
+
+            if (rb2Variante.IsChecked == true)
+            {
+                panelV3.Visibility = Visibility.Collapsed;
+                panelV4.Visibility = Visibility.Collapsed;
+                rbR3.Visibility = Visibility.Collapsed;
+                rbR4.Visibility = Visibility.Collapsed;
+            }
+            else if (rb3Variante.IsChecked == true)
+            {
+                panelV3.Visibility = Visibility.Visible;
+                panelV4.Visibility = Visibility.Collapsed;
+                rbR3.Visibility = Visibility.Visible;
+                rbR4.Visibility = Visibility.Collapsed;
+            }
+            else if (rb4Variante.IsChecked == true)
+            {
+                panelV3.Visibility = Visibility.Visible;
+                panelV4.Visibility = Visibility.Visible;
+                rbR3.Visibility = Visibility.Visible;
+                rbR4.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void OnAdaugaIntrebare(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtTextIntrebare.Text))
+            {
+                tbErrIntrebare.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (rbUnica.IsChecked == true)
+            {
+                List<string> variante = new List<string>();
+                variante.Add(txtV1.Text);
+                variante.Add(txtV2.Text);
+                if (rb3Variante.IsChecked == true || rb4Variante.IsChecked == true)
+                    variante.Add(txtV3.Text);
+                if (rb4Variante.IsChecked == true)
+                    variante.Add(txtV4.Text);
+
+                if (variante.Any(v => string.IsNullOrWhiteSpace(v)))
+                {
+                    tbErrIntrebare.Text = "Completati toate variantele!";
+                    tbErrIntrebare.Visibility = Visibility.Visible;
+                    return;
+                }
+
+                int indexCorect = 0;
+                if (rbR2.IsChecked == true) indexCorect = 1;
+                else if (rbR3.IsChecked == true) indexCorect = 2;
+                else if (rbR4.IsChecked == true) indexCorect = 3;
+
+                categorieNoua.AdaugaIntrebare(new IntrebareUnica(
+                    txtTextIntrebare.Text, variante, indexCorect));
+            }
+            else
+            {
+                bool raspuns = rbAdevarat.IsChecked == true;
+                categorieNoua.AdaugaIntrebare(new IntrebareAdevaratFals(
+                    txtTextIntrebare.Text, raspuns));
+            }
+
+            if (intrebareCurenta >= nrIntrebariTotal)
+            {
+                categorii.Add(categorieNoua);
+                pasul2.Visibility = Visibility.Collapsed;
+                pasul3.Visibility = Visibility.Visible;
+                lblSumarCategorie.Content = $"Categorie: {categorieNoua.Nume}\nDificultate: {categorieNoua.Dificultate}\nIntrebari: {categorieNoua.Intrebari.Count}";
+            }
+            else
+            {
+                intrebareCurenta++;
+                ActualizeazaLabelIntrebare();
+            }
+        }
+
+        private void OnResetCategorie(object sender, RoutedEventArgs e)
+        {
+            pasul3.Visibility = Visibility.Collapsed;
+            pasul1.Visibility = Visibility.Visible;
+            txtNume.Text = string.Empty;
+            txtNrIntrebari.Text = string.Empty;
+            rbUsor.IsChecked = true;
+
         }
 
         // Validare
@@ -445,9 +640,6 @@ namespace ProiectQuizWPF
         {
             txtNume.Text = string.Empty;
             rbUsor.IsChecked = true;
-            ckbTimer.IsChecked = false;
-            ckbImagini.IsChecked = false;
-            ckbLeaderboard.IsChecked = false;
 
             lblNume.Foreground = new SolidColorBrush(Color.FromRgb(137, 180, 250));
             tbErrNume.Visibility = Visibility.Collapsed;
@@ -547,6 +739,9 @@ namespace ProiectQuizWPF
             cat.Nume = txtNumeNou.Text;
             cat.Dificultate = GetDificultateModifica();
 
+            // Salveaza modificarile in fisier
+            stocare.SalveazaToateCategoriile(categorii);
+
             tbErrModifica.Visibility = Visibility.Collapsed;
             tbSuccesModifica.Visibility = Visibility.Visible;
 
@@ -585,15 +780,32 @@ namespace ProiectQuizWPF
                 return;
             }
 
+            if (!int.TryParse(txtScorJucator.Text, out int scor) ||
+                scor % 10 != 0 || scor < 0 || scor > 100)
+            {
+                tbErrJucator.Text = "Scorul trebuie sa fie multiplu de 10 si intre 0-100!";
+                tbErrJucator.Visibility = Visibility.Visible;
+                return;
+            }
+
             Jucator j = new Jucator(txtNumeJucatorCRUD.Text);
-            if (int.TryParse(txtScorJucator.Text, out int scor))
-                j.Scor = scor;
+            j.Scor = scor;
+
+            // Calculeaza automat corecte si gresite din scor
+            j.RaspunsuriCorecte = scor / 10;
+            j.RaspunsuriGresite = 10 - j.RaspunsuriCorecte;
+
+            // Seteaza nivelul automat
+            if (scor >= 80) j.Nivel = NivelJucator.Avansat;
+            else if (scor >= 50) j.Nivel = NivelJucator.Intermediar;
+            else j.Nivel = NivelJucator.Incepator;
 
             jucatori.Add(j);
             txtNumeJucatorCRUD.Text = string.Empty;
             txtScorJucator.Text = string.Empty;
             tbErrJucator.Visibility = Visibility.Collapsed;
-            tbSuccesJucator.Text = "Jucator adaugat!";
+            tbSuccesJucator.Text = $"Jucator adaugat! Nivel: {j.Nivel} | Corecte: {j.RaspunsuriCorecte} | Gresite: {j.RaspunsuriGresite}";
+            tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(166, 227, 161));
             tbSuccesJucator.Visibility = Visibility.Visible;
         }
 

@@ -10,6 +10,7 @@ namespace ProiectQuizWPF
         private Categorie categorie;
         private Jucator jucator;
         private int indexCurent = 0;
+        private int punctePerIntrebare = 10;
         private List<RadioButton> radioButtons = new List<RadioButton>();
 
         public QuizWindow(Categorie categorie, Jucator jucator)
@@ -17,6 +18,14 @@ namespace ProiectQuizWPF
             InitializeComponent();
             this.categorie = categorie;
             this.jucator = jucator;
+            punctePerIntrebare = categorie.Intrebari.Count > 0
+                ? 100 / categorie.Intrebari.Count
+                : 10;
+            // Shuffle intrebari
+            var rng = new Random();
+            this.categorie.Intrebari = categorie.Intrebari
+                .OrderBy(x => rng.Next())
+                .ToList();
             AfiseazaIntrebare();
         }
 
@@ -100,7 +109,7 @@ namespace ProiectQuizWPF
 
             if (corect)
             {
-                jucator.AdaugaPuncte(intrebare.Puncte);
+                jucator.AdaugaPuncte(punctePerIntrebare);
                 tbFeedback.Text = "Raspuns corect! ✓";
                 tbFeedback.Foreground = new SolidColorBrush(Color.FromRgb(166, 227, 161));
             }

@@ -1,6 +1,4 @@
-﻿
-
-namespace Modele
+﻿namespace Modele
 {
     public enum Dificultate { Usor, Mediu, Greu }
 
@@ -9,6 +7,8 @@ namespace Modele
         public string Nume { get; set; }
         public Dificultate Dificultate { get; set; }
         public List<Intrebare> Intrebari { get; set; }
+
+        public int PunctePerIntrebare => Intrebari.Count > 0 ? 100 / Intrebari.Count : 10;
 
         public Categorie(string nume, Dificultate dificultate)
         {
@@ -22,7 +22,6 @@ namespace Modele
             Intrebari.Add(intrebare);
         }
 
-        // LINQ - cauta intrebari dupa text
         public List<Intrebare> CautaIntrebari(string text)
         {
             return Intrebari
@@ -30,7 +29,6 @@ namespace Modele
                 .ToList();
         }
 
-        // LINQ - intrebari dupa puncte
         public List<Intrebare> GetIntrebariDupaPuncte(int puncte)
         {
             return Intrebari

@@ -34,6 +34,30 @@ namespace GestionarDate
             }
         }
 
+        public void SalveazaToateCategoriile(List<Categorie> categorii)
+        {
+            File.WriteAllText(FISIER_CATEGORII, string.Empty);
+
+            using (StreamWriter writer = new StreamWriter(FISIER_CATEGORII, append: true))
+            {
+                foreach (var categorie in categorii)
+                {
+                    foreach (var intrebare in categorie.Intrebari)
+                    {
+                        if (intrebare is IntrebareUnica iu)
+                        {
+                            string variante = string.Join(SEPARATOR_VARIANTE, iu.Variante);
+                            writer.WriteLine($"{categorie.Nume}{SEPARATOR}{categorie.Dificultate}{SEPARATOR}Unica{SEPARATOR}{iu.Text}{SEPARATOR}{iu.Puncte}{SEPARATOR}{iu.IndexRaspunsCorect}{SEPARATOR}{variante}");
+                        }
+                        else if (intrebare is IntrebareAdevaratFals iaf)
+                        {
+                            writer.WriteLine($"{categorie.Nume}{SEPARATOR}{categorie.Dificultate}{SEPARATOR}AdevaratFals{SEPARATOR}{iaf.Text}{SEPARATOR}{iaf.Puncte}{SEPARATOR}{iaf.Raspuns}");
+                        }
+                    }
+                }
+            }
+        }
+
         public List<Categorie> GetCategorii()
         {
             List<Categorie> categorii = new List<Categorie>();

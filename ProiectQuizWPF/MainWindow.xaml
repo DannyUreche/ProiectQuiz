@@ -54,40 +54,25 @@
                    Foreground="#CBA6F7"
                    HorizontalAlignment="Center"
                    Margin="0,20,0,30"/>
-
             <Button Content="Adauga Categorie"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Foreground="#CDD6F4"
-                    Height="45"
+                    Background="Transparent" BorderThickness="0"
+                    Foreground="#CDD6F4" Height="45"
                     Click="OnMenuAdauga"/>
-
             <Button Content="Cauta Categorie"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Foreground="#CDD6F4"
-                    Height="45"
+                    Background="Transparent" BorderThickness="0"
+                    Foreground="#CDD6F4" Height="45"
                     Click="OnMenuCauta"/>
-
             <Button Content="Modifica Categorie"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Foreground="#CDD6F4"
-                    Height="45"
+                    Background="Transparent" BorderThickness="0"
+                    Foreground="#CDD6F4" Height="45"
                     Click="OnMenuModifica"/>
-
             <Button Content="Jucatori"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Foreground="#CDD6F4"
-                    Height="45"
+                    Background="Transparent" BorderThickness="0"
+                    Foreground="#CDD6F4" Height="45"
                     Click="OnMenuJucatori"/>
-
             <Button Content="Joaca Quiz"
-                    Background="#CBA6F7"
-                    BorderThickness="0"
-                    Foreground="#1E1E2E"
-                    Height="45"
+                    Background="#CBA6F7" BorderThickness="0"
+                    Foreground="#1E1E2E" Height="45"
                     Click="OnMenuJoaca"/>
         </StackPanel>
 
@@ -95,90 +80,170 @@
         <Grid Grid.Column="1" Margin="30">
 
             <!-- Panel Adauga -->
-            <StackPanel Name="panelAdauga" Visibility="Visible">
-                <Label Content="Adauga Categorie"
-                       FontSize="24" FontWeight="Bold"
-                       Foreground="#CBA6F7"
-                       Margin="0,0,0,20"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="panelAdauga" Visibility="Visible">
 
-                <Label Content="Nume Categorie" Name="lblNume" Foreground="#89B4FA"/>
-                <TextBox Name="txtNume" Margin="0,0,0,5"/>
-                <TextBlock Name="tbErrNume"
-                           Text="Numele este obligatoriu (max 20 caractere)!"
-                           FontSize="11" Foreground="#F38BA8"
-                           Margin="0,0,0,10"
-                           Visibility="Collapsed"/>
+                    <!-- Pasul 1 -->
+                    <StackPanel Name="pasul1">
+                        <Label Content="Adauga Categorie"
+                               FontSize="24" FontWeight="Bold"
+                               Foreground="#CBA6F7" Margin="0,0,0,20"/>
 
-                <Label Content="Dificultate" Name="lblDificultate" Foreground="#89B4FA" Margin="0,10,0,5"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                    <RadioButton Name="rbUsor" Content="Usor"
-                                 GroupName="Dificultate" IsChecked="True"/>
-                    <RadioButton Name="rbMediu" Content="Mediu"
-                                 GroupName="Dificultate"/>
-                    <RadioButton Name="rbGreu" Content="Greu"
-                                 GroupName="Dificultate"/>
+                        <Label Content="Nume Categorie" Name="lblNume" Foreground="#89B4FA"/>
+                        <TextBox Name="txtNume" Margin="0,0,0,5"/>
+                        <TextBlock Name="tbErrNume"
+                                   Text="Numele este obligatoriu (max 20 caractere)!"
+                                   FontSize="11" Foreground="#F38BA8"
+                                   Margin="0,0,0,10" Visibility="Collapsed"/>
+
+                        <Label Content="Dificultate" Name="lblDificultate"
+                               Foreground="#89B4FA" Margin="0,10,0,5"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <RadioButton Name="rbUsor" Content="Usor"
+                                         GroupName="Dificultate" IsChecked="True"/>
+                            <RadioButton Name="rbMediu" Content="Mediu"
+                                         GroupName="Dificultate"/>
+                            <RadioButton Name="rbGreu" Content="Greu"
+                                         GroupName="Dificultate"/>
+                        </StackPanel>
+
+
+
+                        <Label Content="Numar intrebari" Foreground="#89B4FA" Margin="0,10,0,5"/>
+                        <TextBox Name="txtNrIntrebari" Margin="0,0,0,5"/>
+                        <TextBlock Name="tbErrNrIntrebari"
+                                   Text="Introduceti un numar valid (1-20)!"
+                                   FontSize="11" Foreground="#F38BA8"
+                                   Margin="0,0,0,10" Visibility="Collapsed"/>
+
+                        <Button Content="Urmatorul pas"
+                                Background="#CBA6F7" Foreground="#1E1E2E"
+                                Width="200" HorizontalAlignment="Left"
+                                Margin="0,15,0,0" Click="OnUrmatorul"/>
+                    </StackPanel>
+
+                    <!-- Pasul 2 -->
+                    <StackPanel Name="pasul2" Visibility="Collapsed">
+                        <Label Name="lblIntrebareCurenta"
+                               FontSize="20" FontWeight="Bold"
+                               Foreground="#CBA6F7" Margin="0,0,0,15"/>
+
+                        <Label Content="Tip intrebare" Foreground="#89B4FA" Margin="0,0,0,5"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <RadioButton Name="rbUnica" Content="Raspuns unic"
+                                         GroupName="TipIntrebare" IsChecked="True"
+                                         Checked="OnTipIntrebareChanged"/>
+                            <RadioButton Name="rbAdevaratFals" Content="Adevarat/Fals"
+                                         GroupName="TipIntrebare"
+                                         Checked="OnTipIntrebareChanged"/>
+                        </StackPanel>
+
+                        <Label Content="Text intrebare" Foreground="#89B4FA"/>
+                        <TextBox Name="txtTextIntrebare" Margin="0,0,0,10"/>
+                        <TextBlock Name="tbErrTextIntrebare"
+                                   Text="Textul intrebarii este obligatoriu!"
+                                   FontSize="11" Foreground="#F38BA8"
+                                   Margin="0,0,0,10" Visibility="Collapsed"/>
+
+                        <StackPanel Name="panelVarianteAdauga">
+                            <Label Content="Numar variante" Foreground="#89B4FA"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <RadioButton Name="rb2Variante" Content="2 variante"
+                                             GroupName="NrVariante" IsChecked="True"
+                                             Checked="OnNrVarianteChanged"/>
+                                <RadioButton Name="rb3Variante" Content="3 variante"
+                                             GroupName="NrVariante"
+                                             Checked="OnNrVarianteChanged"/>
+                                <RadioButton Name="rb4Variante" Content="4 variante"
+                                             GroupName="NrVariante"
+                                             Checked="OnNrVarianteChanged"/>
+                            </StackPanel>
+
+                            <Label Content="Varianta 1" Foreground="#89B4FA"/>
+                            <TextBox Name="txtV1" Margin="0,0,0,5"/>
+                            <Label Content="Varianta 2" Foreground="#89B4FA"/>
+                            <TextBox Name="txtV2" Margin="0,0,0,5"/>
+                            <StackPanel Name="panelV3" Visibility="Collapsed">
+                                <Label Content="Varianta 3" Foreground="#89B4FA"/>
+                                <TextBox Name="txtV3" Margin="0,0,0,5"/>
+                            </StackPanel>
+                            <StackPanel Name="panelV4" Visibility="Collapsed">
+                                <Label Content="Varianta 4" Foreground="#89B4FA"/>
+                                <TextBox Name="txtV4" Margin="0,0,0,5"/>
+                            </StackPanel>
+
+                            <Label Content="Raspuns corect" Foreground="#89B4FA" Margin="0,10,0,5"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Name="rbR1" Content="Varianta 1"
+                                             GroupName="RaspunsCorect" IsChecked="True"/>
+                                <RadioButton Name="rbR2" Content="Varianta 2"
+                                             GroupName="RaspunsCorect"/>
+                                <RadioButton Name="rbR3" Content="Varianta 3"
+                                             GroupName="RaspunsCorect" Visibility="Collapsed"/>
+                                <RadioButton Name="rbR4" Content="Varianta 4"
+                                             GroupName="RaspunsCorect" Visibility="Collapsed"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="panelAdevaratFals" Visibility="Collapsed">
+                            <Label Content="Raspuns corect" Foreground="#89B4FA" Margin="0,10,0,5"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Name="rbAdevarat" Content="Adevarat"
+                                             GroupName="RaspunsAF" IsChecked="True"/>
+                                <RadioButton Name="rbFals" Content="Fals"
+                                             GroupName="RaspunsAF"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Name="tbErrIntrebare"
+                                   Text="Completati toate campurile!"
+                                   FontSize="11" Foreground="#F38BA8"
+                                   Margin="0,10,0,0" Visibility="Collapsed"/>
+
+                        <Button Name="btnAdaugaIntrebare"
+                                Content="Adauga intrebare"
+                                Background="#A6E3A1" Foreground="#1E1E2E"
+                                Width="200" HorizontalAlignment="Left"
+                                Margin="0,15,0,0" Click="OnAdaugaIntrebare"/>
+                    </StackPanel>
+
+                    <!-- Pasul 3 -->
+                    <StackPanel Name="pasul3" Visibility="Collapsed">
+                        <Label Content="Categorie creata cu succes!"
+                               FontSize="24" FontWeight="Bold"
+                               Foreground="#A6E3A1" Margin="0,0,0,20"/>
+                        <Label Name="lblSumarCategorie"
+                               Foreground="#CDD6F4" FontSize="16"/>
+                        <Button Content="Adauga alta categorie"
+                                Background="#CBA6F7" Foreground="#1E1E2E"
+                                Width="220" HorizontalAlignment="Left"
+                                Margin="0,20,0,0" Click="OnResetCategorie"/>
+                    </StackPanel>
+
+                    <TextBlock Name="tbSucces" Visibility="Collapsed"/>
                 </StackPanel>
-                <TextBlock Name="tbErrDificultate"
-                           Text="Selectati o dificultate!"
-                           FontSize="11" Foreground="#F38BA8"
-                           Margin="0,0,0,10"
-                           Visibility="Collapsed"/>
-
-                <Label Content="Optiuni Quiz" Foreground="#89B4FA" Margin="0,10,0,5"/>
-                <CheckBox Name="ckbTimer" Content="Timer per intrebare"/>
-                <CheckBox Name="ckbImagini" Content="Intrebari cu imagini"/>
-                <CheckBox Name="ckbLeaderboard" Content="Leaderboard activ"/>
-
-                <Grid Margin="0,20,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Adauga"
-                            Background="#A6E3A1" Foreground="#1E1E2E"
-                            Click="OnAdauga"/>
-                    <Button Grid.Column="2" Content="Reset"
-                            Background="#F38BA8" Foreground="#1E1E2E"
-                            Click="OnReset"/>
-                </Grid>
-
-                <TextBlock Name="tbSucces"
-                           Text="Categorie adaugata cu succes!"
-                           FontSize="14" Foreground="#A6E3A1"
-                           HorizontalAlignment="Center"
-                           Margin="0,15,0,0"
-                           Visibility="Collapsed"/>
-            </StackPanel>
+            </ScrollViewer>
 
             <!-- Panel Cauta -->
             <StackPanel Name="panelCauta" Visibility="Collapsed">
                 <Label Content="Cauta Categorie"
                        FontSize="24" FontWeight="Bold"
-                       Foreground="#CBA6F7"
-                       Margin="0,0,0,20"/>
-
+                       Foreground="#CBA6F7" Margin="0,0,0,20"/>
                 <Label Content="Nume categorie" Foreground="#89B4FA"/>
                 <TextBox Name="txtCauta" Margin="0,0,0,10"/>
-
                 <Button Content="Cauta"
                         Background="#89B4FA" Foreground="#1E1E2E"
                         Width="150" HorizontalAlignment="Left"
                         Click="OnCauta"/>
-
                 <TextBlock Name="tbErrCauta"
                            Text="Categoria nu a fost gasita!"
                            FontSize="12" Foreground="#F38BA8"
-                           Margin="0,10,0,0"
-                           Visibility="Collapsed"/>
-
+                           Margin="0,10,0,0" Visibility="Collapsed"/>
                 <DataGrid Name="dgCategorii"
                           Margin="0,15,0,0"
                           AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          CanUserAddRows="False"
-                          Background="#313244"
-                          Foreground="#CDD6F4"
+                          IsReadOnly="True" CanUserAddRows="False"
+                          Background="#313244" Foreground="#CDD6F4"
                           RowBackground="#313244"
                           AlternatingRowBackground="#45475A"
                           Visibility="Collapsed">
@@ -194,34 +259,23 @@
             <StackPanel Name="panelModifica" Visibility="Collapsed">
                 <Label Content="Modifica Categorie"
                        FontSize="24" FontWeight="Bold"
-                       Foreground="#CBA6F7"
-                       Margin="0,0,0,20"/>
-
+                       Foreground="#CBA6F7" Margin="0,0,0,20"/>
                 <Label Content="Selecteaza categoria" Foreground="#89B4FA"/>
-                <ComboBox Name="cmbCategorii"
-                          Height="36"
-                          Background="#313244"
-                          Foreground="#313244"
+                <ComboBox Name="cmbCategorii" Height="36"
+                          Background="#313244" Foreground="#313244"
                           DisplayMemberPath="Nume"
                           SelectionChanged="OnCategorieSelectata"
                           Margin="0,0,0,15"/>
-
                 <Label Content="Intrebari" Foreground="#89B4FA"/>
-                <ListBox Name="lstIntrebari"
-                         Height="150"
-                         Background="#313244"
-                         Foreground="#CDD6F4"
-                         DisplayMemberPath="Text"
-                         Margin="0,0,0,15"/>
-
+                <ListBox Name="lstIntrebari" Height="150"
+                         Background="#313244" Foreground="#CDD6F4"
+                         DisplayMemberPath="Text" Margin="0,0,0,15"/>
                 <Label Content="Nume nou categorie" Name="lblNumeNou" Foreground="#89B4FA"/>
                 <TextBox Name="txtNumeNou" Margin="0,0,0,5"/>
                 <TextBlock Name="tbErrModifica"
                            Text="Numele este obligatoriu (max 20 caractere)!"
                            FontSize="11" Foreground="#F38BA8"
-                           Margin="0,0,0,10"
-                           Visibility="Collapsed"/>
-
+                           Margin="0,0,0,10" Visibility="Collapsed"/>
                 <Label Content="Dificultate noua" Foreground="#89B4FA" Margin="0,5,0,5"/>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                     <RadioButton Name="rbUsorMod" Content="Usor"
@@ -231,74 +285,30 @@
                     <RadioButton Name="rbGreuMod" Content="Greu"
                                  GroupName="DificultateModifica"/>
                 </StackPanel>
-
                 <Button Content="Modifica"
                         Background="#89B4FA" Foreground="#1E1E2E"
                         Width="150" HorizontalAlignment="Left"
                         Click="OnModifica"/>
-
                 <TextBlock Name="tbSuccesModifica"
                            Text="Categorie modificata cu succes!"
                            FontSize="14" Foreground="#A6E3A1"
-                           Margin="0,15,0,0"
-                           Visibility="Collapsed"/>
-            </StackPanel>
-
-            <!-- Panel Joaca -->
-            <StackPanel Name="panelJoaca" Visibility="Collapsed">
-                <Label Content="Alege Categoria"
-                       FontSize="24" FontWeight="Bold"
-                       Foreground="#CBA6F7"
-                       Margin="0,0,0,20"/>
-
-                <Label Content="Selecteaza o categorie pentru a incepe quiz-ul:"
-                       Foreground="#CDD6F4" Margin="0,0,0,15"/>
-
-                <ListBox Name="lstCategoriiJoc"
-                         Height="200"
-                         Background="#313244"
-                         Foreground="#CDD6F4"
-                         DisplayMemberPath="Nume"
-                         Margin="0,0,0,20"/>
-
-                <Label Content="Introduceti numele dvs:" Foreground="#89B4FA"/>
-                <TextBox Name="txtNumeJucator" Margin="0,0,0,15"/>
-
-                <Button Content="Incepe Quiz-ul!"
-                        Background="#CBA6F7" Foreground="#1E1E2E"
-                        Width="200" HorizontalAlignment="Left"
-                        Click="OnIncepeQuiz"/>
-
-                <TextBlock Name="tbErrJoc"
-                           Text="Selectati o categorie si introduceti numele!"
-                           FontSize="12" Foreground="#F38BA8"
-                           Margin="0,10,0,0"
-                           Visibility="Collapsed"/>
+                           Margin="0,15,0,0" Visibility="Collapsed"/>
             </StackPanel>
 
             <!-- Panel Jucatori -->
             <StackPanel Name="panelJucatori" Visibility="Collapsed">
                 <Label Content="Gestiune Jucatori"
                        FontSize="24" FontWeight="Bold"
-                       Foreground="#CBA6F7"
-                       Margin="0,0,0,20"/>
-
-                <!-- Binding la numar jucatori -->
-                <Label Content="{Binding ElementName=dgJucatori, Path=Items.Count, StringFormat='Total jucatori: {0}'}"
-                       Foreground="#89B4FA"
-                       FontWeight="Bold"
-                       Margin="0,0,0,10"/>
-
-                <!-- DataGrid jucatori -->
-                <DataGrid Name="dgJucatori"
-                          Height="180"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
+                       Foreground="#CBA6F7" Margin="0,0,0,20"/>
+                <Label ContentStringFormat="Numarul de jucatori este: {0}"
+       Content="{Binding ElementName=dgJucatori, Path=Items.Count}"
+       Foreground="#89B4FA" FontWeight="Bold" Margin="0,0,0,10"/>
+                <DataGrid Name="dgJucatori" Height="180"
+                          AutoGenerateColumns="False" IsReadOnly="True"
                           CanUserAddRows="False"
-                          Background="#313244"
-                          Foreground="#CDD6F4"
-                          RowBackground="#313244"
-                          AlternatingRowBackground="#45475A"
+                          Background="#CDD6F4" Foreground="#313244"
+                          RowBackground="#CDD6F4"
+                          AlternatingRowBackground="#CDD6F4"
                           SelectionChanged="OnJucatorSelectat"
                           Margin="0,0,0,15">
                     <DataGrid.Columns>
@@ -309,15 +319,12 @@
                         <DataGridTextColumn Header="Gresite" Binding="{Binding RaspunsuriGresite}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
-
-                <!-- Formular -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
                     <StackPanel Grid.Column="0">
                         <Label Content="Nume jucator" Name="lblNumeJucator" Foreground="#89B4FA"/>
                         <TextBox Name="txtNumeJucatorCRUD"
@@ -328,7 +335,6 @@
                                    FontSize="11" Foreground="#F38BA8"
                                    Visibility="Collapsed"/>
                     </StackPanel>
-
                     <StackPanel Grid.Column="2">
                         <Label Content="Scor" Foreground="#89B4FA"/>
                         <TextBox Name="txtScorJucator"
@@ -336,8 +342,6 @@
                                  Margin="0,0,0,5"/>
                     </StackPanel>
                 </Grid>
-
-                <!-- Butoane CRUD -->
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
                     <Button Content="Adauga"
                             Background="#A6E3A1" Foreground="#1E1E2E"
@@ -349,14 +353,33 @@
                             Click="OnModificaJucator"/>
                     <Button Content="Sterge"
                             Background="#F38BA8" Foreground="#1E1E2E"
-                            Width="100"
-                            Click="OnStergeJucator"/>
+                            Width="100" Click="OnStergeJucator"/>
                 </StackPanel>
-
                 <TextBlock Name="tbSuccesJucator"
                            FontSize="14" Foreground="#A6E3A1"
-                           Margin="0,15,0,0"
-                           Visibility="Collapsed"/>
+                           Margin="0,15,0,0" Visibility="Collapsed"/>
+            </StackPanel>
+
+            <!-- Panel Joaca -->
+            <StackPanel Name="panelJoaca" Visibility="Collapsed">
+                <Label Content="Alege Categoria"
+                       FontSize="24" FontWeight="Bold"
+                       Foreground="#CBA6F7" Margin="0,0,0,20"/>
+                <Label Content="Selecteaza o categorie pentru a incepe quiz-ul:"
+                       Foreground="#CDD6F4" Margin="0,0,0,15"/>
+                <ListBox Name="lstCategoriiJoc" Height="200"
+                         Background="#313244" Foreground="#CDD6F4"
+                         DisplayMemberPath="Nume" Margin="0,0,0,20"/>
+                <Label Content="Introduceti numele dvs:" Foreground="#89B4FA"/>
+                <TextBox Name="txtNumeJucator" Margin="0,0,0,15"/>
+                <Button Content="Incepe Quiz-ul!"
+                        Background="#CBA6F7" Foreground="#1E1E2E"
+                        Width="200" HorizontalAlignment="Left"
+                        Click="OnIncepeQuiz"/>
+                <TextBlock Name="tbErrJoc"
+                           Text="Selectati o categorie si introduceti numele!"
+                           FontSize="12" Foreground="#F38BA8"
+                           Margin="0,10,0,0" Visibility="Collapsed"/>
             </StackPanel>
 
         </Grid>

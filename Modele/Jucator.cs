@@ -49,7 +49,7 @@ namespace Modele
 
         private void ActualizeazaNivel()
         {
-            if (Scor >= 100) Nivel = NivelJucator.Avansat;
+            if (Scor >= 80) Nivel = NivelJucator.Avansat;
             else if (Scor >= 50) Nivel = NivelJucator.Intermediar;
             else Nivel = NivelJucator.Incepator;
         }
