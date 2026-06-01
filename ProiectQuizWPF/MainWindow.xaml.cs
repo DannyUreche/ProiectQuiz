@@ -1,5 +1,4 @@
-﻿
-using Modele;
+﻿using Modele;
 using GestionarDate;
 using System.Windows;
 using System.Windows.Media;
@@ -11,22 +10,17 @@ namespace ProiectQuizWPF
     public partial class MainWindow : Window
     {
         private const int LUNGIME_MAX_NUME = 20;
-        private List<Categorie> categorii = new List<Categorie>();
-        private ObservableCollection<Jucator> jucatori = new ObservableCollection<Jucator>();
-        private GestionarDate.StocareDataFisier stocare = new GestionarDate.StocareDataFisier();
+        private MainWindowViewModel viewModel = new MainWindowViewModel();
 
-        private Jucator jucatorSelectat;
-        public Jucator JucatorSelectat
-        {
-            get => jucatorSelectat;
-            set { jucatorSelectat = value; }
-        }
+        private Categorie categorieNoua;
+        private int nrIntrebariTotal;
+        private int intrebareCurenta;
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
-            dgJucatori.ItemsSource = jucatori;
+            DataContext = viewModel;
+            dgJucatori.ItemsSource = viewModel.Jucatori;
             PopuleazaExemple();
         }
 
@@ -69,7 +63,6 @@ namespace ProiectQuizWPF
             matematicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este un numar complex?", new List<string> { "a+bi unde i^2=-1", "a+bi unde i^2=1", "a*bi", "a/bi" }, 0));
             matematicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Seria lui Taylor aproximeaza functii prin polinoame.", true));
 
-            // INFORMATICA
             var informaticaUsor = new Categorie("Informatica - Usor", Dificultate.Usor);
             informaticaUsor.AdaugaIntrebare(new IntrebareUnica("Ce inseamna CPU?", new List<string> { "Central Processing Unit", "Computer Power Unit", "Central Power Unit", "Core Processing Unit" }, 0));
             informaticaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("RAM inseamna Random Access Memory.", true));
@@ -106,7 +99,6 @@ namespace ProiectQuizWPF
             informaticaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("In C#, interfetele pot contine implementari de metode incepand cu C# 8.", true));
             informaticaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este un thread?", new List<string> { "Un proces independent", "Un fir de executie in cadrul unui proces", "Un tip de variabila", "O structura de date" }, 1));
 
-            // FIZICA-USOR
             var fizicaUsor = new Categorie("Fizica - Usor", Dificultate.Usor);
             fizicaUsor.AdaugaIntrebare(new IntrebareUnica("Care este unitatea de masura a fortei?", new List<string> { "Watt", "Newton", "Joule", "Pascal" }, 1));
             fizicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Viteza luminii este aproximativ 300.000 km/s.", true));
@@ -119,7 +111,6 @@ namespace ProiectQuizWPF
             fizicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Apa fierbe la 100 de grade Celsius la presiune normala.", true));
             fizicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce este densitatea?", new List<string> { "Masa/Volum", "Volum/Masa", "Masa*Volum", "Masa+Volum" }, 0));
 
-            // FIZICA MEDIU
             var fizicaMediu = new Categorie("Fizica - Mediu", Dificultate.Mediu);
             fizicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este acceleratia?", new List<string> { "Viteza/Timp", "Variatie viteza/Timp", "Forta/Masa", "Masa*Viteza" }, 1));
             fizicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Legea lui Newton spune ca F = m * a.", true));
@@ -132,7 +123,6 @@ namespace ProiectQuizWPF
             fizicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Campul electric este produs de sarcini electrice.", true));
             fizicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este inductia electromagnetica?", new List<string> { "Producerea curentului prin camp magnetic variabil", "Producerea magnetismului prin curent", "Transferul de caldura", "Refractia luminii" }, 0));
 
-            // FIZICA GREU
             var fizicaGreu = new Categorie("Fizica - Greu", Dificultate.Greu);
             fizicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce descrie ecuatia lui Schrodinger?", new List<string> { "Miscarea planetelor", "Comportamentul particulelor cuantice", "Campul gravitational", "Relativitatea" }, 1));
             fizicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Teoria relativitatii speciale apartine lui Einstein.", true));
@@ -145,7 +135,6 @@ namespace ProiectQuizWPF
             fizicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Undele gravitationale au fost detectate experimental.", true));
             fizicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este dualismul unda-corpuscul?", new List<string> { "Lumina se comporta atat ca unda cat si ca particula", "Electronii sunt doar unde", "Fotonii au masa", "Lumina este doar particula" }, 0));
 
-            // CHIMIE-USOR
             var chimieUsor = new Categorie("Chimie - Usor", Dificultate.Usor);
             chimieUsor.AdaugaIntrebare(new IntrebareUnica("Care este simbolul chimic al aurului?", new List<string> { "Ag", "Au", "Al", "At" }, 1));
             chimieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("H2O este formula chimica a apei.", true));
@@ -158,7 +147,6 @@ namespace ProiectQuizWPF
             chimieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Fierul are simbolul Fe.", true));
             chimieUsor.AdaugaIntrebare(new IntrebareUnica("Ce este o reactie chimica?", new List<string> { "Transformarea fizica a materiei", "Transformarea chimica a substantelor", "Modificarea temperaturii", "Schimbarea culorii" }, 1));
 
-            // CHIMIE MEDIU
             var chimieMediu = new Categorie("Chimie - Mediu", Dificultate.Mediu);
             chimieMediu.AdaugaIntrebare(new IntrebareUnica("Ce este un izotop?", new List<string> { "Atom cu acelasi numar de protoni dar neutroni diferiti", "Atom cu acelasi numar de electroni", "Molecula cu aceeasi masa", "Ion cu sarcina diferita" }, 0));
             chimieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Reactiile de oxidare implica pierdere de electroni.", true));
@@ -171,7 +159,6 @@ namespace ProiectQuizWPF
             chimieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Carbonul poate forma 4 legaturi covalente.", true));
             chimieMediu.AdaugaIntrebare(new IntrebareUnica("Ce este o reactie exoterma?", new List<string> { "Absoarbe caldura", "Elibereaza caldura", "Nu implica caldura", "Implica lumina" }, 1));
 
-            // CHIMIE GREU
             var chimieGreu = new Categorie("Chimie - Greu", Dificultate.Greu);
             chimieGreu.AdaugaIntrebare(new IntrebareUnica("Ce descrie legea lui Avogadro?", new List<string> { "Volume egale de gaze contin acelasi numar de molecule", "Masa se conserva", "Presiunea e proportionala cu temperatura", "Volumul e invers proportional cu presiunea" }, 0));
             chimieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Numarul lui Avogadro este aproximativ 6.022 x 10^23.", true));
@@ -184,7 +171,6 @@ namespace ProiectQuizWPF
             chimieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("ADN-ul contine bazele adenina, guanina, citozina si timina.", true));
             chimieGreu.AdaugaIntrebare(new IntrebareUnica("Ce este legea lui Hess?", new List<string> { "Entalpia reactiei nu depinde de calea urmata", "Masa se conserva", "Presiunea e constanta", "Volumul e constant" }, 0));
 
-            // GEOGRAFIE
             var geografieUsor = new Categorie("Geografie - Usor", Dificultate.Usor);
             geografieUsor.AdaugaIntrebare(new IntrebareUnica("Care este capitala Romaniei?", new List<string> { "Cluj", "Iasi", "Bucuresti", "Timisoara" }, 2));
             geografieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Dunarea se varsa in Marea Neagra.", true));
@@ -197,8 +183,6 @@ namespace ProiectQuizWPF
             geografieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Australia este atat un continent cat si o tara.", true));
             geografieUsor.AdaugaIntrebare(new IntrebareUnica("Cate continente are Pamantul?", new List<string> { "5", "6", "7", "8" }, 2));
 
-
-            // GEOGRAFIE MEDIU
             var geografieMediu = new Categorie("Geografie - Mediu", Dificultate.Mediu);
             geografieMediu.AdaugaIntrebare(new IntrebareUnica("Care este cel mai lung fluviu din lume?", new List<string> { "Amazon", "Nil", "Yangtze", "Mississippi" }, 1));
             geografieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Sahara este cel mai mare desert din lume.", true));
@@ -211,7 +195,6 @@ namespace ProiectQuizWPF
             geografieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Rusia este cea mai mare tara din lume ca suprafata.", true));
             geografieMediu.AdaugaIntrebare(new IntrebareUnica("Care este cel mai inalt varf din Europa?", new List<string> { "Mont Blanc", "Matterhorn", "Elbrus", "Monte Rosa" }, 2));
 
-            // GEOGRAFIE GREU
             var geografieGreu = new Categorie("Geografie - Greu", Dificultate.Greu);
             geografieGreu.AdaugaIntrebare(new IntrebareUnica("Care este capitala Kazakhstanului?", new List<string> { "Almaty", "Astana", "Shymkent", "Karaganda" }, 1));
             geografieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Groenlanda apartine Danemarcei.", true));
@@ -224,7 +207,6 @@ namespace ProiectQuizWPF
             geografieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Stramtoarea Bering separa Asia de America.", true));
             geografieGreu.AdaugaIntrebare(new IntrebareUnica("Pe ce meridian se afla Greenwich?", new List<string> { "15", "0", "180", "90" }, 1));
 
-            // ISTORIE
             var istorieUsor = new Categorie("Istorie - Usor", Dificultate.Usor);
             istorieUsor.AdaugaIntrebare(new IntrebareUnica("In ce an a avut loc Revolutia Franceza?", new List<string> { "1789", "1815", "1848", "1776" }, 0));
             istorieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Al Doilea Razboi Mondial s-a incheiat in 1945.", true));
@@ -237,7 +219,6 @@ namespace ProiectQuizWPF
             istorieUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Decebal a fost rege al dacilor.", true));
             istorieUsor.AdaugaIntrebare(new IntrebareUnica("Cine a fost primul om pe Luna?", new List<string> { "Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn" }, 2));
 
-            // ISTORIE MEDIU
             var istorieMediu = new Categorie("Istorie - Mediu", Dificultate.Mediu);
             istorieMediu.AdaugaIntrebare(new IntrebareUnica("In ce an a inceput Al Doilea Razboi Mondial?", new List<string> { "1935", "1937", "1939", "1941" }, 2));
             istorieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Hitler a condus Germania Nazista.", true));
@@ -250,20 +231,18 @@ namespace ProiectQuizWPF
             istorieMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Razboiul de 100 de ani a fost intre Franta si Anglia.", true));
             istorieMediu.AdaugaIntrebare(new IntrebareUnica("In ce an Romania si-a castigat independenta?", new List<string> { "1859", "1866", "1877", "1918" }, 2));
 
-            // ISTORIE GREU
             var istorieGreu = new Categorie("Istorie - Greu", Dificultate.Greu);
             istorieGreu.AdaugaIntrebare(new IntrebareUnica("In ce an a fost fondat Imperiul Roman?", new List<string> { "753 i.Hr.", "509 i.Hr.", "27 i.Hr.", "44 i.Hr." }, 2));
             istorieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Tratatul de la Versailles a pus capat Primului Razboi Mondial.", true));
             istorieGreu.AdaugaIntrebare(new IntrebareUnica("Cine a fost primul imparat al Chinei?", new List<string> { "Confucius", "Qin Shi Huang", "Kublai Han", "Sun Yat-sen" }, 1));
             istorieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Razboiul Peloponesiac a fost intre Atena si Sparta.", true));
-            istorieGreu.AdaugaIntrebare(new IntrebareUnica("In ce an a fost cucerита Constantinopolul de otomani?", new List<string> { "1389", "1453", "1492", "1517" }, 1));
+            istorieGreu.AdaugaIntrebare(new IntrebareUnica("In ce an a fost cucerita Constantinopolul de otomani?", new List<string> { "1389", "1453", "1492", "1517" }, 1));
             istorieGreu.AdaugaIntrebare(new IntrebareUnica("Cine a scris Magna Carta?", new List<string> { "Regele Ioan al Angliei", "Regele Richard I", "Papa Inocentiu III", "Baronii englezi impreuna cu Regele Ioan" }, 3));
             istorieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Razboiul de 30 de ani a implicat majoritate statelor europene.", true));
             istorieGreu.AdaugaIntrebare(new IntrebareUnica("Ce civilizatie a construit Machu Picchu?", new List<string> { "Azteca", "Maya", "Inca", "Olmeca" }, 2));
             istorieGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Revolutia Industriala a inceput in Anglia.", true));
             istorieGreu.AdaugaIntrebare(new IntrebareUnica("Cine a fost Alexandru cel Mare?", new List<string> { "Imparat roman", "Rege macedonean", "Faraon egiptean", "Rege persan" }, 1));
 
-            // SPORT
             var sportUsor = new Categorie("Sport - Usor", Dificultate.Usor);
             sportUsor.AdaugaIntrebare(new IntrebareUnica("Cati jucatori are o echipa de fotbal?", new List<string> { "9", "10", "11", "12" }, 2));
             sportUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Jocurile Olimpice au loc la fiecare 4 ani.", true));
@@ -276,45 +255,6 @@ namespace ProiectQuizWPF
             sportUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Maratonul are aproximativ 42 km.", true));
             sportUsor.AdaugaIntrebare(new IntrebareUnica("Cati jucatori are o echipa de volei?", new List<string> { "5", "6", "7", "8" }, 1));
 
-            // MUZICA
-            var muzicaUsor = new Categorie("Muzica - Usor", Dificultate.Usor);
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Cate note muzicale sunt in gama diatonica?", new List<string> { "5", "6", "7", "8" }, 2));
-            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Mozart a fost un compozitor austriac.", true));
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce instrument foloseste Beethoven ca simbol?", new List<string> { "Vioara", "Pian", "Chitara", "Flaut" }, 1));
-            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Beatles a fost o trupa britanica.", true));
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce nota urmeaza dupa Do?", new List<string> { "La", "Re", "Mi", "Sol" }, 1));
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Cate corzi are o chitara clasica?", new List<string> { "4", "5", "6", "7" }, 2));
-            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Opera este un gen muzical cu voce si orchestra.", true));
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce este un metronom?", new List<string> { "Un instrument muzical", "Un dispozitiv care masoara tempo-ul", "Un tip de nota", "Un gen muzical" }, 1));
-            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Michael Jackson a fost supranumit Regele Pop-ului.", true));
-            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce gen muzical a aparut in Jamaica?", new List<string> { "Jazz", "Blues", "Reggae", "Rock" }, 2));
-
-            // MUZICA MEDIU
-            var muzicaMediu = new Categorie("Muzica - Mediu", Dificultate.Mediu);
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce instrument a folosit Jimi Hendrix?", new List<string> { "Bas", "Chitara electrica", "Pian", "Tobe" }, 1));
-            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Jazz-ul a aparut in SUA la inceputul secolului XX.", true));
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce compozitor a scris Simfonia a 9-a desi era surd?", new List<string> { "Mozart", "Bach", "Beethoven", "Brahms" }, 2));
-            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Freddie Mercury a fost solistul trupei Queen.", true));
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este o octava?", new List<string> { "7 note", "8 note", "Intervalul intre Do si Do urmator", "O gama muzicala" }, 2));
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Cate simfonii a compus Beethoven?", new List<string> { "7", "8", "9", "10" }, 2));
-            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Elvis Presley este supranumit Regele Rock and Roll-ului.", true));
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce gen muzical a creat Bob Marley?", new List<string> { "Jazz", "Blues", "Reggae", "Soul" }, 2));
-            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Vioara are 4 corzi.", true));
-            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este un arpegiu?", new List<string> { "Note cantate simultan", "Note cantate succesiv dintr-un acord", "Un tip de ritm", "O tehnica de respiratie" }, 1));
-
-            // MUZICA GREU
-            var muzicaGreu = new Categorie("Muzica - Greu", Dificultate.Greu);
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este contrapunctul in muzica?", new List<string> { "Combinarea a doua sau mai multe melodii independente", "Un tip de ritm", "O tehnica de improvizatie", "Un instrument muzical" }, 0));
-            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Johann Sebastian Bach a trait in perioada Barocului.", true));
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este modalismul in muzica?", new List<string> { "Folosirea gamelor modale in loc de major/minor", "Un tip de ritm", "O tehnica de compozitie moderna", "O forma muzicala" }, 0));
-            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Stradivarius este un tip de vioara renumita.", true));
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este o fuga in muzica?", new List<string> { "O forma muzicala bazata pe imitatie", "Un tip de ritm rapid", "O tehnica de improvizatie", "Un gen vocal" }, 0));
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Cate simfonii a compus Mozart?", new List<string> { "31", "41", "51", "61" }, 1));
-            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Serialismul este o tehnica de compozitie bazata pe serii de 12 sunete.", true));
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este un leitmotiv?", new List<string> { "O tema muzicala asociata cu un personaj", "Un tip de instrument", "O forma de sonata", "Un ritm specific" }, 0));
-            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Debussy este considerat un compozitor impresionist.", true));
-            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este o cadenta in muzica?", new List<string> { "O progresie de acorduri care incheie o fraza", "Un tip de ritm", "O tehnica vocala", "Un instrument de percutie" }, 0));
-            // SPORT MEDIU
             var sportMediu = new Categorie("Sport - Mediu", Dificultate.Mediu);
             sportMediu.AdaugaIntrebare(new IntrebareUnica("Cate seturi are un meci de tenis la Grand Slam masculin?", new List<string> { "3", "4", "5", "6" }, 2));
             sportMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Usain Bolt detine recordul mondial la 100m.", true));
@@ -327,7 +267,6 @@ namespace ProiectQuizWPF
             sportMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Nadia Comaneci a primit primul 10 perfect in gimnastica olimpica.", true));
             sportMediu.AdaugaIntrebare(new IntrebareUnica("Cate gauri are un teren de golf standard?", new List<string> { "9", "12", "18", "24" }, 2));
 
-            // SPORT GREU
             var sportGreu = new Categorie("Sport - Greu", Dificultate.Greu);
             sportGreu.AdaugaIntrebare(new IntrebareUnica("Cine detine recordul de Grand Slamuri in tenis masculin?", new List<string> { "Rafael Nadal", "Roger Federer", "Novak Djokovic", "Pete Sampras" }, 2));
             sportGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Tour de France este cea mai veche cursa ciclista de etape.", true));
@@ -340,70 +279,81 @@ namespace ProiectQuizWPF
             sportGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Lance Armstrong a fost descalificat din toate titlurile Tour de France.", true));
             sportGreu.AdaugaIntrebare(new IntrebareUnica("Cate puncte valoreaza un drop goal in rugby?", new List<string> { "2", "3", "4", "5" }, 1));
 
+            var muzicaUsor = new Categorie("Muzica - Usor", Dificultate.Usor);
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Cate note muzicale sunt in gama diatonica?", new List<string> { "5", "6", "7", "8" }, 2));
+            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Mozart a fost un compozitor austriac.", true));
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce instrument foloseste Beethoven ca simbol?", new List<string> { "Vioara", "Pian", "Chitara", "Flaut" }, 1));
+            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Beatles a fost o trupa britanica.", true));
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce nota urmeaza dupa Do?", new List<string> { "La", "Re", "Mi", "Sol" }, 1));
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Cate corzi are o chitara clasica?", new List<string> { "4", "5", "6", "7" }, 2));
+            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Opera este un gen muzical cu voce si orchestra.", true));
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce este un metronom?", new List<string> { "Un instrument muzical", "Un dispozitiv care masoara tempo-ul", "Un tip de nota", "Un gen muzical" }, 1));
+            muzicaUsor.AdaugaIntrebare(new IntrebareAdevaratFals("Michael Jackson a fost supranumit Regele Pop-ului.", true));
+            muzicaUsor.AdaugaIntrebare(new IntrebareUnica("Ce gen muzical a aparut in Jamaica?", new List<string> { "Jazz", "Blues", "Reggae", "Rock" }, 2));
+
+            var muzicaMediu = new Categorie("Muzica - Mediu", Dificultate.Mediu);
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce instrument a folosit Jimi Hendrix?", new List<string> { "Bas", "Chitara electrica", "Pian", "Tobe" }, 1));
+            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Jazz-ul a aparut in SUA la inceputul secolului XX.", true));
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce compozitor a scris Simfonia a 9-a desi era surd?", new List<string> { "Mozart", "Bach", "Beethoven", "Brahms" }, 2));
+            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Freddie Mercury a fost solistul trupei Queen.", true));
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este o octava?", new List<string> { "7 note", "8 note", "Intervalul intre Do si Do urmator", "O gama muzicala" }, 2));
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Cate simfonii a compus Beethoven?", new List<string> { "7", "8", "9", "10" }, 2));
+            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Elvis Presley este supranumit Regele Rock and Roll-ului.", true));
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce gen muzical a creat Bob Marley?", new List<string> { "Jazz", "Blues", "Reggae", "Soul" }, 2));
+            muzicaMediu.AdaugaIntrebare(new IntrebareAdevaratFals("Vioara are 4 corzi.", true));
+            muzicaMediu.AdaugaIntrebare(new IntrebareUnica("Ce este un arpegiu?", new List<string> { "Note cantate simultan", "Note cantate succesiv dintr-un acord", "Un tip de ritm", "O tehnica de respiratie" }, 1));
+
+            var muzicaGreu = new Categorie("Muzica - Greu", Dificultate.Greu);
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este contrapunctul in muzica?", new List<string> { "Combinarea a doua sau mai multe melodii independente", "Un tip de ritm", "O tehnica de improvizatie", "Un instrument muzical" }, 0));
+            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Johann Sebastian Bach a trait in perioada Barocului.", true));
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este modalismul in muzica?", new List<string> { "Folosirea gamelor modale in loc de major/minor", "Un tip de ritm", "O tehnica de compozitie moderna", "O forma muzicala" }, 0));
+            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Stradivarius este un tip de vioara renumita.", true));
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este o fuga in muzica?", new List<string> { "O forma muzicala bazata pe imitatie", "Un tip de ritm rapid", "O tehnica de improvizatie", "Un gen vocal" }, 0));
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Cate simfonii a compus Mozart?", new List<string> { "31", "41", "51", "61" }, 1));
+            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Serialismul este o tehnica de compozitie bazata pe serii de 12 sunete.", true));
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este un leitmotiv?", new List<string> { "O tema muzicala asociata cu un personaj", "Un tip de instrument", "O forma de sonata", "Un ritm specific" }, 0));
+            muzicaGreu.AdaugaIntrebare(new IntrebareAdevaratFals("Debussy este considerat un compozitor impresionist.", true));
+            muzicaGreu.AdaugaIntrebare(new IntrebareUnica("Ce este o cadenta in muzica?", new List<string> { "O progresie de acorduri care incheie o fraza", "Un tip de ritm", "O tehnica vocala", "Un instrument de percutie" }, 0));
+
             // Adauga toate categoriile
-            categorii.Add(matematicaUsor);
-            categorii.Add(matematicaMediu);
-            categorii.Add(matematicaGreu);
-            categorii.Add(informaticaUsor);
-            categorii.Add(informaticaMediu);
-            categorii.Add(informaticaGreu);
-            categorii.Add(fizicaUsor);
-            categorii.Add(fizicaMediu);
-            categorii.Add(fizicaGreu);
-            categorii.Add(chimieUsor);
-            categorii.Add(chimieMediu);
-            categorii.Add(chimieGreu);
-            categorii.Add(geografieUsor);
-            categorii.Add(geografieMediu);
-            categorii.Add(geografieGreu);
-            categorii.Add(istorieUsor);
-            categorii.Add(istorieMediu);
-            categorii.Add(istorieGreu);
-            categorii.Add(sportUsor);
-            categorii.Add(sportMediu);
-            categorii.Add(sportGreu);
-            categorii.Add(muzicaUsor);
-            categorii.Add(muzicaMediu);
-            categorii.Add(muzicaGreu);
+            viewModel.Categorii.Add(matematicaUsor);
+            viewModel.Categorii.Add(matematicaMediu);
+            viewModel.Categorii.Add(matematicaGreu);
+            viewModel.Categorii.Add(informaticaUsor);
+            viewModel.Categorii.Add(informaticaMediu);
+            viewModel.Categorii.Add(informaticaGreu);
+            viewModel.Categorii.Add(fizicaUsor);
+            viewModel.Categorii.Add(fizicaMediu);
+            viewModel.Categorii.Add(fizicaGreu);
+            viewModel.Categorii.Add(chimieUsor);
+            viewModel.Categorii.Add(chimieMediu);
+            viewModel.Categorii.Add(chimieGreu);
+            viewModel.Categorii.Add(geografieUsor);
+            viewModel.Categorii.Add(geografieMediu);
+            viewModel.Categorii.Add(geografieGreu);
+            viewModel.Categorii.Add(istorieUsor);
+            viewModel.Categorii.Add(istorieMediu);
+            viewModel.Categorii.Add(istorieGreu);
+            viewModel.Categorii.Add(sportUsor);
+            viewModel.Categorii.Add(sportMediu);
+            viewModel.Categorii.Add(sportGreu);
+            viewModel.Categorii.Add(muzicaUsor);
+            viewModel.Categorii.Add(muzicaMediu);
+            viewModel.Categorii.Add(muzicaGreu);
 
             // Jucatori exemple
-            var j1 = new Jucator("Alexandru");
-            j1.Scor = 95;
-            j1.RaspunsuriCorecte = 9;
-            j1.RaspunsuriGresite = 1;
-            j1.Nivel = NivelJucator.Avansat;
+            var j1 = new Jucator("Alexandru"); j1.Scor = 95; j1.RaspunsuriCorecte = 9; j1.RaspunsuriGresite = 1; j1.Nivel = NivelJucator.Avansat;
+            var j2 = new Jucator("Maria"); j2.Scor = 80; j2.RaspunsuriCorecte = 8; j2.RaspunsuriGresite = 2; j2.Nivel = NivelJucator.Avansat;
+            var j3 = new Jucator("Andrei"); j3.Scor = 60; j3.RaspunsuriCorecte = 6; j3.RaspunsuriGresite = 4; j3.Nivel = NivelJucator.Intermediar;
+            var j4 = new Jucator("Elena"); j4.Scor = 40; j4.RaspunsuriCorecte = 4; j4.RaspunsuriGresite = 6; j4.Nivel = NivelJucator.Incepator;
+            var j5 = new Jucator("Mihai"); j5.Scor = 20; j5.RaspunsuriCorecte = 2; j5.RaspunsuriGresite = 8; j5.Nivel = NivelJucator.Incepator;
 
-            var j2 = new Jucator("Maria");
-            j2.Scor = 80;
-            j2.RaspunsuriCorecte = 8;
-            j2.RaspunsuriGresite = 2;
-            j2.Nivel = NivelJucator.Avansat;
-
-            var j3 = new Jucator("Andrei");
-            j3.Scor = 60;
-            j3.RaspunsuriCorecte = 6;
-            j3.RaspunsuriGresite = 4;
-            j3.Nivel = NivelJucator.Intermediar;
-
-            var j4 = new Jucator("Elena");
-            j4.Scor = 40;
-            j4.RaspunsuriCorecte = 4;
-            j4.RaspunsuriGresite = 6;
-            j4.Nivel = NivelJucator.Incepator;
-
-            var j5 = new Jucator("Mihai");
-            j5.Scor = 20;
-            j5.RaspunsuriCorecte = 2;
-            j5.RaspunsuriGresite = 8;
-            j5.Nivel = NivelJucator.Incepator;
-
-            jucatori.Add(j1);
-            jucatori.Add(j2);
-            jucatori.Add(j3);
-            jucatori.Add(j4);
-            jucatori.Add(j5);
+            viewModel.Jucatori.Add(j1);
+            viewModel.Jucatori.Add(j2);
+            viewModel.Jucatori.Add(j3);
+            viewModel.Jucatori.Add(j4);
+            viewModel.Jucatori.Add(j5);
         }
-
 
         // Meniu
         private void OnMenuAdauga(object sender, RoutedEventArgs e)
@@ -433,16 +383,33 @@ namespace ProiectQuizWPF
             panelJoaca.Visibility = Visibility.Collapsed;
 
             cmbCategorii.ItemsSource = null;
-            cmbCategorii.ItemsSource = categorii;
+            cmbCategorii.ItemsSource = viewModel.Categorii;
         }
 
-        private Categorie categorieNoua;
-        private int nrIntrebariTotal;
-        private int intrebareCurenta;
+        private void OnMenuJucatori(object sender, RoutedEventArgs e)
+        {
+            panelAdauga.Visibility = Visibility.Collapsed;
+            panelCauta.Visibility = Visibility.Collapsed;
+            panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Visible;
+            panelJoaca.Visibility = Visibility.Collapsed;
+        }
 
+        private void OnMenuJoaca(object sender, RoutedEventArgs e)
+        {
+            panelAdauga.Visibility = Visibility.Collapsed;
+            panelCauta.Visibility = Visibility.Collapsed;
+            panelModifica.Visibility = Visibility.Collapsed;
+            panelJucatori.Visibility = Visibility.Collapsed;
+            panelJoaca.Visibility = Visibility.Visible;
+
+            lstCategoriiJoc.ItemsSource = null;
+            lstCategoriiJoc.ItemsSource = viewModel.Categorii;
+        }
+
+        // Adauga Categorie - pas cu pas
         private void OnUrmatorul(object sender, RoutedEventArgs e)
         {
-            // Validare nume
             if (string.IsNullOrWhiteSpace(txtNume.Text) || txtNume.Text.Length > LUNGIME_MAX_NUME)
             {
                 lblNume.Foreground = new SolidColorBrush(Color.FromRgb(243, 139, 168));
@@ -450,7 +417,6 @@ namespace ProiectQuizWPF
                 return;
             }
 
-            // Validare numar intrebari
             if (!int.TryParse(txtNrIntrebari.Text, out int nr) || nr < 1 || nr > 20)
             {
                 tbErrNrIntrebari.Visibility = Visibility.Visible;
@@ -487,7 +453,6 @@ namespace ProiectQuizWPF
         private void OnTipIntrebareChanged(object sender, RoutedEventArgs e)
         {
             if (panelVarianteAdauga == null) return;
-
             if (rbUnica.IsChecked == true)
             {
                 panelVarianteAdauga.Visibility = Visibility.Visible;
@@ -503,7 +468,6 @@ namespace ProiectQuizWPF
         private void OnNrVarianteChanged(object sender, RoutedEventArgs e)
         {
             if (panelV3 == null) return;
-
             if (rb2Variante.IsChecked == true)
             {
                 panelV3.Visibility = Visibility.Collapsed;
@@ -557,19 +521,17 @@ namespace ProiectQuizWPF
                 else if (rbR3.IsChecked == true) indexCorect = 2;
                 else if (rbR4.IsChecked == true) indexCorect = 3;
 
-                categorieNoua.AdaugaIntrebare(new IntrebareUnica(
-                    txtTextIntrebare.Text, variante, indexCorect));
+                categorieNoua.AdaugaIntrebare(new IntrebareUnica(txtTextIntrebare.Text, variante, indexCorect));
             }
             else
             {
                 bool raspuns = rbAdevarat.IsChecked == true;
-                categorieNoua.AdaugaIntrebare(new IntrebareAdevaratFals(
-                    txtTextIntrebare.Text, raspuns));
+                categorieNoua.AdaugaIntrebare(new IntrebareAdevaratFals(txtTextIntrebare.Text, raspuns));
             }
 
             if (intrebareCurenta >= nrIntrebariTotal)
             {
-                categorii.Add(categorieNoua);
+                viewModel.Categorii.Add(categorieNoua);
                 pasul2.Visibility = Visibility.Collapsed;
                 pasul3.Visibility = Visibility.Visible;
                 lblSumarCategorie.Content = $"Categorie: {categorieNoua.Nume}\nDificultate: {categorieNoua.Dificultate}\nIntrebari: {categorieNoua.Intrebari.Count}";
@@ -588,14 +550,11 @@ namespace ProiectQuizWPF
             txtNume.Text = string.Empty;
             txtNrIntrebari.Text = string.Empty;
             rbUsor.IsChecked = true;
-
         }
 
-        // Validare
         private bool ValideazaDate()
         {
             bool esteValid = true;
-
             lblNume.Foreground = new SolidColorBrush(Color.FromRgb(137, 180, 250));
             tbErrNume.Visibility = Visibility.Collapsed;
 
@@ -605,7 +564,6 @@ namespace ProiectQuizWPF
                 tbErrNume.Visibility = Visibility.Visible;
                 esteValid = false;
             }
-
             return esteValid;
         }
 
@@ -623,40 +581,22 @@ namespace ProiectQuizWPF
             return Dificultate.Usor;
         }
 
-        // Adauga
         private void OnAdauga(object sender, RoutedEventArgs e)
         {
             if (!ValideazaDate()) return;
-
             Dificultate dificultate = GetDificultateSelectata();
             Categorie categorie = new Categorie(txtNume.Text, dificultate);
-            categorii.Add(categorie);
-
+            viewModel.Categorii.Add(categorie);
             tbSucces.Visibility = Visibility.Visible;
         }
 
-        // Reset
         private void OnReset(object sender, RoutedEventArgs e)
         {
             txtNume.Text = string.Empty;
             rbUsor.IsChecked = true;
-
             lblNume.Foreground = new SolidColorBrush(Color.FromRgb(137, 180, 250));
             tbErrNume.Visibility = Visibility.Collapsed;
             tbSucces.Visibility = Visibility.Collapsed;
-        }
-
-        // Joaca
-        private void OnMenuJoaca(object sender, RoutedEventArgs e)
-        {
-            panelAdauga.Visibility = Visibility.Collapsed;
-            panelCauta.Visibility = Visibility.Collapsed;
-            panelModifica.Visibility = Visibility.Collapsed;
-            panelJucatori.Visibility = Visibility.Collapsed;
-            panelJoaca.Visibility = Visibility.Visible;
-
-            lstCategoriiJoc.ItemsSource = null;
-            lstCategoriiJoc.ItemsSource = categorii;
         }
 
         private void OnIncepeQuiz(object sender, RoutedEventArgs e)
@@ -669,18 +609,15 @@ namespace ProiectQuizWPF
             }
 
             tbErrJoc.Visibility = Visibility.Collapsed;
-
             Jucator jucator = new Jucator(txtNumeJucator.Text);
             QuizWindow quizWindow = new QuizWindow(categorieSelectata, jucator);
             quizWindow.ShowDialog();
         }
 
-        // Cauta
         private void OnCauta(object sender, RoutedEventArgs e)
         {
             string nume = txtCauta.Text.ToLower().Trim();
-
-            List<Categorie> rezultate = categorii
+            List<Categorie> rezultate = viewModel.Categorii
                 .Where(c => c.Nume.ToLower().Contains(nume))
                 .ToList();
 
@@ -697,28 +634,22 @@ namespace ProiectQuizWPF
             }
         }
 
-        // Selectie categorie in ComboBox
-        private void OnCategorieSelectata(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void OnCategorieSelectata(object sender, SelectionChangedEventArgs e)
         {
             if (cmbCategorii.SelectedItem is Categorie cat)
             {
                 txtNumeNou.Text = cat.Nume;
-
-                // Seteaza dificultatea
                 switch (cat.Dificultate)
                 {
                     case Dificultate.Mediu: rbMediuMod.IsChecked = true; break;
                     case Dificultate.Greu: rbGreuMod.IsChecked = true; break;
                     default: rbUsorMod.IsChecked = true; break;
                 }
-
-                // Afiseaza intrebarile in ListBox
                 lstIntrebari.ItemsSource = null;
                 lstIntrebari.ItemsSource = cat.Intrebari;
             }
         }
 
-        // Modifica
         private void OnModifica(object sender, RoutedEventArgs e)
         {
             if (cmbCategorii.SelectedItem is not Categorie cat)
@@ -738,33 +669,19 @@ namespace ProiectQuizWPF
 
             cat.Nume = txtNumeNou.Text;
             cat.Dificultate = GetDificultateModifica();
-
-            // Salveaza modificarile in fisier
-            stocare.SalveazaToateCategoriile(categorii);
+            viewModel.Stocare.SalveazaToateCategoriile(viewModel.Categorii);
 
             tbErrModifica.Visibility = Visibility.Collapsed;
             tbSuccesModifica.Visibility = Visibility.Visible;
-
-            // Refresh ComboBox
             cmbCategorii.ItemsSource = null;
-            cmbCategorii.ItemsSource = categorii;
+            cmbCategorii.ItemsSource = viewModel.Categorii;
         }
 
-        // Meniu Jucatori
-        private void OnMenuJucatori(object sender, RoutedEventArgs e)
-        {
-            panelAdauga.Visibility = Visibility.Collapsed;
-            panelCauta.Visibility = Visibility.Collapsed;
-            panelModifica.Visibility = Visibility.Collapsed;
-            panelJucatori.Visibility = Visibility.Visible;
-            panelJoaca.Visibility = Visibility.Collapsed;
-        }
-
-        private void OnJucatorSelectat(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void OnJucatorSelectat(object sender, SelectionChangedEventArgs e)
         {
             if (dgJucatori.SelectedItem is Jucator j)
             {
-                JucatorSelectat = j;
+                viewModel.JucatorSelectat = j;
                 txtNumeJucatorCRUD.Text = j.Nume;
                 txtScorJucator.Text = j.Scor.ToString();
                 tbErrJucator.Visibility = Visibility.Collapsed;
@@ -790,17 +707,14 @@ namespace ProiectQuizWPF
 
             Jucator j = new Jucator(txtNumeJucatorCRUD.Text);
             j.Scor = scor;
-
-            // Calculeaza automat corecte si gresite din scor
             j.RaspunsuriCorecte = scor / 10;
             j.RaspunsuriGresite = 10 - j.RaspunsuriCorecte;
 
-            // Seteaza nivelul automat
             if (scor >= 80) j.Nivel = NivelJucator.Avansat;
             else if (scor >= 50) j.Nivel = NivelJucator.Intermediar;
             else j.Nivel = NivelJucator.Incepator;
 
-            jucatori.Add(j);
+            viewModel.Jucatori.Add(j);
             txtNumeJucatorCRUD.Text = string.Empty;
             txtScorJucator.Text = string.Empty;
             tbErrJucator.Visibility = Visibility.Collapsed;
@@ -845,12 +759,14 @@ namespace ProiectQuizWPF
                 return;
             }
 
-            jucatori.Remove(j);
+            viewModel.Jucatori.Remove(j);
             txtNumeJucatorCRUD.Text = string.Empty;
             txtScorJucator.Text = string.Empty;
             tbSuccesJucator.Text = "Jucator sters!";
             tbSuccesJucator.Foreground = new SolidColorBrush(Color.FromRgb(166, 227, 161));
             tbSuccesJucator.Visibility = Visibility.Visible;
         }
+
+        private void txtNrIntrebari_TextChanged(object sender, TextChangedEventArgs e) { }
     }
 }

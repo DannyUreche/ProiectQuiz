@@ -32,7 +32,6 @@ namespace GestionarDate
                 }
             }
 
-            // LINQ - sortare descrescator dupa scor
             return jucatori.OrderByDescending(j => j.Scor).ToList();
         }
     }
