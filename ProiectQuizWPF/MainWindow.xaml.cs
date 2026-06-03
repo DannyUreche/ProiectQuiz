@@ -11,6 +11,10 @@ namespace ProiectQuizWPF
     {
         private const int LUNGIME_MAX_NUME = 20;
         private MainWindowViewModel viewModel = new MainWindowViewModel();
+        private System.Windows.Threading.DispatcherTimer ceasTimer;
+        private System.Windows.Threading.DispatcherTimer cronometruTimer;
+        private TimeSpan timpCronometru = TimeSpan.Zero;
+        private bool cronometruPornit = false;
 
         private Categorie categorieNoua;
         private int nrIntrebariTotal;
@@ -22,6 +26,7 @@ namespace ProiectQuizWPF
             DataContext = viewModel;
             dgJucatori.ItemsSource = viewModel.Jucatori;
             PopuleazaExemple();
+            PornesteTimer();
         }
 
         private void PopuleazaExemple()
@@ -768,5 +773,46 @@ namespace ProiectQuizWPF
         }
 
         private void txtNrIntrebari_TextChanged(object sender, TextChangedEventArgs e) { }
+
+        private void PornesteTimer()
+        {
+            ceasTimer = new System.Windows.Threading.DispatcherTimer();
+            ceasTimer.Interval = TimeSpan.FromSeconds(1);
+            ceasTimer.Tick += (s, e) =>
+            {
+                lblCeas.Content = DateTime.Now.ToString("HH:mm:ss");
+                lblData.Content = DateTime.Now.ToString("dd.MM.yyyy");
+            };
+            ceasTimer.Start();
+        }
+
+        private void OnStartCronometru(object sender, RoutedEventArgs e)
+        {
+            if (!cronometruPornit)
+            {
+                cronometruTimer = new System.Windows.Threading.DispatcherTimer();
+                cronometruTimer.Interval = TimeSpan.FromSeconds(1);
+                cronometruTimer.Tick += (s, ev) =>
+                {
+                    timpCronometru = timpCronometru.Add(TimeSpan.FromSeconds(1));
+                    lblCronometru.Content = timpCronometru.ToString(@"hh\:mm\:ss");
+                };
+                cronometruTimer.Start();
+                cronometruPornit = true;
+                btnStopCronometru.IsEnabled = true;
+            }
+        }
+
+        private void OnStopCronometru(object sender, RoutedEventArgs e)
+        {
+            if (cronometruPornit)
+            {
+                cronometruTimer.Stop();
+                cronometruPornit = false;
+                timpCronometru = TimeSpan.Zero;
+                lblCronometru.Content = "00:00:00";
+                btnStopCronometru.IsEnabled = false;
+            }
+        }
     }
 }
